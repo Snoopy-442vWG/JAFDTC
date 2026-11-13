@@ -55,8 +55,17 @@ namespace JAFDTC.Utilities
 
         private static readonly string _appDirPath = AppContext.BaseDirectory;
 
-        private static readonly string _settingsDirPath
+        // default location of the data folder (settings, configurations, database, ...) and the pointer file that
+        // records a user-selected data folder. the pointer lives outside the data folder so it can be found at launch.
+
+        private static readonly string _defaultDataDirPath
             = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "JAFDTC");
+
+        private static readonly string _dataDirPointerPath
+            = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                           "JAFDTC", "datafolder.txt");
+
+        private static readonly string _settingsDirPath = ResolveDataDirPath();
 
 #if TODO_IMPLEMENT
         private static string _commonDirPath
@@ -80,6 +89,130 @@ namespace JAFDTC.Utilities
         // setup
         //
         // ------------------------------------------------------------------------------------------------------------
+
+        /// <summary>
+        /// return the data folder to use: the folder recorded in the pointer file if it is usable, the default folder
+        /// otherwise.
+        /// </summary>
+        private static string ResolveDataDirPath()
+        {
+            try
+            {
+                if (System.IO.File.Exists(_dataDirPointerPath))
+                {
+                    string path = System.IO.File.ReadAllText(_dataDirPointerPath).Trim();
+                    if (!string.IsNullOrEmpty(path) && Path.IsPathRooted(path))
+                    {
+                        Directory.CreateDirectory(path);
+                        return path;
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                // fall through to the default folder if the selected folder is not usable.
+            }
+            return _defaultDataDirPath;
+        }
+
+        /// <summary>
+        /// path to the folder that holds jafdtc settings, configurations, databases, and so on.
+        /// </summary>
+        public static string DataDirPath => _settingsDirPath;
+
+        /// <summary>
+        /// path to the default data folder.
+        /// </summary>
+        public static string DefaultDataDirPath => _defaultDataDirPath;
+
+        private static string NormalizeDirPath(string path)
+            => Path.GetFullPath(path.Trim()).TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+
+        /// <summary>
+        /// select a new data folder to take effect the next time jafdtc launches. the new folder is created if it
+        /// does not exist. if copyExisting is true, files from the current data folder are copied to the new folder
+        /// without replacing files that already exist there (the current folder is left as is). returns true on
+        /// success, otherwise false with a description of the problem in error.
+        /// </summary>
+        public static bool ChangeDataDirPath(string newPath, bool copyExisting, out string error)
+        {
+            error = null;
+            try
+            {
+                if (string.IsNullOrWhiteSpace(newPath) || !Path.IsPathRooted(newPath.Trim()))
+                {
+                    error = "Please select a complete folder path.";
+                    return false;
+                }
+
+                string newDir = NormalizeDirPath(newPath);
+                string curDir = NormalizeDirPath(_settingsDirPath);
+                if (string.Equals(newDir, curDir, StringComparison.OrdinalIgnoreCase))
+                {
+                    error = "That is already the JAFDTC data folder.";
+                    return false;
+                }
+                if (newDir.StartsWith(curDir + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase))
+                {
+                    error = "The new folder cannot be inside the current JAFDTC data folder.";
+                    return false;
+                }
+
+                Directory.CreateDirectory(newDir);
+                string probe = Path.Combine(newDir, ".jafdtc-write-test");
+                System.IO.File.WriteAllText(probe, "test");
+                System.IO.File.Delete(probe);
+
+                if (copyExisting && Directory.Exists(curDir))
+                {
+                    int failed = CopyDirContents(curDir, newDir);
+                    if (failed > 0)
+                        FileManager.Log($"FileManager:ChangeDataDirPath {failed} file(s) could not be copied");
+                }
+
+                string pointerDir = Path.GetDirectoryName(_dataDirPointerPath);
+                Directory.CreateDirectory(pointerDir);
+                if (string.Equals(newDir, NormalizeDirPath(_defaultDataDirPath), StringComparison.OrdinalIgnoreCase))
+                    System.IO.File.Delete(_dataDirPointerPath);
+                else
+                    System.IO.File.WriteAllText(_dataDirPointerPath, newDir);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                FileManager.Log($"FileManager:ChangeDataDirPath exception {ex}");
+                error = $"Unable to use that folder: {ex.Message}";
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// recursively copy the files in a folder, skipping files that already exist at the destination and the log
+        /// file (which is open). returns the number of files that could not be copied.
+        /// </summary>
+        private static int CopyDirContents(string srcDir, string dstDir)
+        {
+            int failed = 0;
+            Directory.CreateDirectory(dstDir);
+            foreach (string file in Directory.GetFiles(srcDir))
+            {
+                string name = Path.GetFileName(file);
+                string dst = Path.Combine(dstDir, name);
+                if (name.Equals("jafdtc-log.txt", StringComparison.OrdinalIgnoreCase) || System.IO.File.Exists(dst))
+                    continue;
+                try
+                {
+                    System.IO.File.Copy(file, dst, false);
+                }
+                catch (Exception)
+                {
+                    failed++;
+                }
+            }
+            foreach (string dir in Directory.GetDirectories(srcDir))
+                failed += CopyDirContents(dir, Path.Combine(dstDir, Path.GetFileName(dir)));
+            return failed;
+        }
 
         /// <summary>
         /// pre-flight the file manager by checking paths and creating the settings folder if necessary. throws an

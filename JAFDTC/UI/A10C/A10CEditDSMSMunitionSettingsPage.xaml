@@ -36,7 +36,7 @@ https://www.gnu.org/licenses/.
     </Page.Resources>
 
     <Grid Grid.Row="0" Grid.Column="0"
-          HorizontalAlignment="Stretch" VerticalAlignment="Top">
+          HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
@@ -49,7 +49,7 @@ https://www.gnu.org/licenses/.
 
         <!-- Munition Selection
           -->
-        <ListView Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" x:Name="uiComboMunition"
+        <ListView Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" x:Name="uiComboMunition" Margin="0,0,0,8"
                   ItemsSource="{x:Bind _munitions}" SelectionMode="Single"
                   SelectionChanged="ComboMunition_SelectionChanged"
                   ToolTipService.ToolTip="Select munition to alter settings">
@@ -80,9 +80,20 @@ https://www.gnu.org/licenses/.
 
         <!-- Munition Settings
           -->
-        <Grid Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" Margin="12,0,0,0"
-              HorizontalAlignment="Stretch">
+        <ScrollViewer Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" Grid.RowSpan="2"
+                      VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto"
+                      VerticalScrollMode="Enabled" HorizontalScrollMode="Enabled">
+        <Grid Margin="12,0,16,0" HorizontalAlignment="Stretch">
             <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
@@ -136,13 +147,44 @@ https://www.gnu.org/licenses/.
                 FIXUP
             </TextBlock>
 
+            <!-- Profile Selection (jet default profile or a custom profile for the munition) -->
+            <TextBlock Grid.Row="4" Grid.Column="0" Margin="12,12,0,0" x:Name="uiLabelProfile"
+                       VerticalAlignment="Center"
+                       Style="{ThemeResource EditorParamStaticTextBlockStyle}">
+                Profile
+            </TextBlock>
+            <ComboBox Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2" Margin="12,12,0,0" x:Name="uiComboProfile"
+                      Width="320" HorizontalAlignment="Left" VerticalAlignment="Center"
+                      SelectionChanged="ComboProfile_SelectionChanged"
+                      ToolTipService.ToolTip="Select the profile to edit: the jet's default profile for the munition or a custom profile"/>
+            <StackPanel Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="3" Margin="12,12,0,0" Orientation="Horizontal">
+                <ComboBox x:Name="uiComboBattleBook" Width="320" VerticalAlignment="Center"
+                          PlaceholderText="Add Battle Book profile..."
+                          DisplayMemberPath="Display"
+                          SelectionChanged="ComboBattleBook_SelectionChanged"
+                          ToolTipService.ToolTip="Add a profile from the v303 Battle Book Z diagrams and fill in its settings"/>
+                <Button Margin="12,0,0,0" x:Name="uiBtnNewProfile" Click="BtnNewProfile_Click"
+                        ToolTipService.ToolTip="Create a new custom profile with a name you choose">
+                    New...
+                </Button>
+                <Button Margin="8,0,0,0" x:Name="uiBtnDeleteProfile" Click="BtnDeleteProfile_Click"
+                        ToolTipService.ToolTip="Delete the selected custom profile">
+                    Delete
+                </Button>
+            </StackPanel>
+
+            <!-- Battle Book Z diagram for the selected profile -->
+            <Image Grid.Row="6" Grid.Column="2" Grid.RowSpan="12" Margin="240,12,12,0" x:Name="uiImageZSled"
+                   Width="400" Stretch="Uniform" HorizontalAlignment="Left" VerticalAlignment="Top"
+                   Visibility="Collapsed"/>
+
             <!-- Delivery Mode (CCIP/CCRP) -->
-            <TextBlock Grid.Row="4" Grid.Column="0" Margin="12,12,0,0" x:Name="uiLabelDeliveryMode"
+            <TextBlock Grid.Row="6" Grid.Column="0" Margin="12,12,0,0" x:Name="uiLabelDeliveryMode"
                        VerticalAlignment="Center"
                        Style="{ThemeResource EditorParamStaticTextBlockStyle}">
                 Delivery Mode
             </TextBlock>
-            <ComboBox Grid.Row="4" Grid.Column="1" Margin="12,12,0,0" x:Name="uiComboDeliveryMode"
+            <ComboBox Grid.Row="6" Grid.Column="1" Margin="12,12,0,0" x:Name="uiComboDeliveryMode"
                       HorizontalAlignment="Stretch" VerticalAlignment="Center"
                       SelectionChanged="ComboBox_SelectionChanged"
                       Tag="DeliveryMode">
@@ -152,12 +194,12 @@ https://www.gnu.org/licenses/.
             </ComboBox>
 
             <!-- Release Mode -->
-            <TextBlock Grid.Row="5" Grid.Column="0" Margin="12,12,0,0" x:Name="uiLabelReleaseMode"
+            <TextBlock Grid.Row="7" Grid.Column="0" Margin="12,12,0,0" x:Name="uiLabelReleaseMode"
                        VerticalAlignment="Center"
                        Style="{ThemeResource EditorParamStaticTextBlockStyle}">
                 Release
             </TextBlock>
-            <ComboBox Grid.Row="5" Grid.Column="1" Margin="12,12,0,0" x:Name="uiComboReleaseMode"
+            <ComboBox Grid.Row="7" Grid.Column="1" Margin="12,12,0,0" x:Name="uiComboReleaseMode"
                       HorizontalAlignment="Stretch" VerticalAlignment="Center"
                       SelectionChanged="ComboBox_SelectionChanged"
                       Tag="ReleaseMode">
@@ -166,7 +208,7 @@ https://www.gnu.org/licenses/.
                 <ComboBoxItem>RIP SGL</ComboBoxItem>
                 <ComboBoxItem>RIP PRS</ComboBoxItem>
             </ComboBox>
-            <StackPanel Grid.Row="5" Grid.Column="2" Margin="12,12,0,0" x:Name="uiStackRipple"
+            <StackPanel Grid.Row="7" Grid.Column="2" Margin="12,12,0,0" x:Name="uiStackRipple"
                         Orientation="Horizontal">
                 <TextBlock Style="{ThemeResource EditorParamStaticTextBlockStyle}" VerticalAlignment="Center" x:Name="uiLabelRipple">
                     Ripple
@@ -198,29 +240,29 @@ https://www.gnu.org/licenses/.
             </StackPanel>
 
             <!-- Escape Maneuver -->
-            <TextBlock Grid.Row="6" Grid.Column="0" Margin="12,12,0,0" x:Name="uiLabelEscMnvr"
+            <TextBlock Grid.Row="8" Grid.Column="0" Margin="12,12,0,0" x:Name="uiLabelEscMnvr"
                        VerticalAlignment="Center"
                        Style="{ThemeResource EditorParamStaticTextBlockStyle}">
                 Escape Manuever
             </TextBlock>
-            <ComboBox Grid.Row="6" Grid.Column="1" Margin="12,12,0,0" x:Name="uiComboEscMnvr"
+            <ComboBox Grid.Row="8" Grid.Column="1" Margin="12,12,0,0" x:Name="uiComboEscMnvr"
                       HorizontalAlignment="Stretch" VerticalAlignment="Center"
                       SelectionChanged="ComboBox_SelectionChanged"
                       Tag="EscapeManeuver">
                 <!-- Must match order of A10C.DSMSSystem.EscapeManeuvers -->
                 <ComboBoxItem>NONE</ComboBoxItem>
-                <ComboBoxItem>CLB</ComboBoxItem>
+                <ComboBoxItem>CLM</ComboBoxItem>
                 <ComboBoxItem>TRN</ComboBoxItem>
                 <ComboBoxItem>TLT</ComboBoxItem>
             </ComboBox>
 
             <!-- HOF -->
-            <TextBlock Grid.Row="7" Grid.Column="0" Margin="12,12,0,0" x:Name="uiLabelHOF"
+            <TextBlock Grid.Row="9" Grid.Column="0" Margin="12,12,0,0" x:Name="uiLabelHOF"
                        VerticalAlignment="Center"
                        Style="{ThemeResource EditorParamStaticTextBlockStyle}">
                 HOF
             </TextBlock>
-            <ComboBox Grid.Row="7" Grid.Column="1" Margin="12,12,0,0" x:Name="uiComboHOF"
+            <ComboBox Grid.Row="9" Grid.Column="1" Margin="12,12,0,0" x:Name="uiComboHOF"
                       HorizontalAlignment="Stretch" VerticalAlignment="Center"
                       SelectionChanged="ComboBox_SelectionChanged"
                       Tag="HOFOption">
@@ -235,7 +277,7 @@ https://www.gnu.org/licenses/.
                 <ComboBoxItem>2600</ComboBoxItem>
                 <ComboBoxItem>3000</ComboBoxItem>
             </ComboBox>
-            <StackPanel Grid.Row="7" Grid.Column="2" Margin="12,12,0,0" x:Name="uiStackRPM"
+            <StackPanel Grid.Row="9" Grid.Column="2" Margin="12,12,0,0" x:Name="uiStackRPM"
                         Orientation="Horizontal">
                 <TextBlock x:Name="uiLabelRPM"
                            HorizontalAlignment="Left" VerticalAlignment="Center"
@@ -256,12 +298,12 @@ https://www.gnu.org/licenses/.
             </StackPanel>
 
             <!-- Fuze -->
-            <TextBlock Grid.Row="8" Grid.Column="0" Margin="12,12,0,0" x:Name="uiLabelFuse"
+            <TextBlock Grid.Row="10" Grid.Column="0" Margin="12,12,0,0" x:Name="uiLabelFuse"
                        VerticalAlignment="Center"
                        Style="{ThemeResource EditorParamStaticTextBlockStyle}" >
                 Fuze
             </TextBlock>
-            <ComboBox Grid.Row="8" Grid.Column="1" Margin="12,12,0,0" x:Name="uiComboFuze"
+            <ComboBox Grid.Row="10" Grid.Column="1" Margin="12,12,0,0" x:Name="uiComboFuze"
                       HorizontalAlignment="Stretch" VerticalAlignment="Center"
                       SelectionChanged="ComboBox_SelectionChanged"
                       Tag="FuzeOption">
@@ -271,12 +313,12 @@ https://www.gnu.org/licenses/.
             </ComboBox>
 
             <!-- Auto Lase -->
-            <TextBlock Grid.Row="9" Grid.Column="0" Margin="12,12,0,0" x:Name="uiLabelAutoLase"
+            <TextBlock Grid.Row="11" Grid.Column="0" Margin="12,12,0,0" x:Name="uiLabelAutoLase"
                        VerticalAlignment="Center"
                        Style="{ThemeResource EditorParamStaticTextBlockStyle}" >
                 Auto Lase
             </TextBlock>
-            <StackPanel Grid.Row="9" Grid.Column="1" Margin="12,12,0,0" x:Name="uiStackAutoLase"
+            <StackPanel Grid.Row="11" Grid.Column="1" Margin="12,12,0,0" x:Name="uiStackAutoLase"
                         Orientation="Horizontal">
                 <CheckBox Width="32" MinWidth="32" x:Name="uiCheckAutoLase"
                           Click="CheckBox_Clicked"
@@ -290,14 +332,154 @@ https://www.gnu.org/licenses/.
                          Tag="LaseSeconds"
                          ToolTipService.ToolTip="Seconds before impact to automatically start the laser firing"/>
             </StackPanel>
-            <TextBlock Grid.Row="9" Grid.Column="2" Margin="6,12,0,0" x:Name="uiLabelLaseTimeUnits"
+            <TextBlock Grid.Row="11" Grid.Column="2" Margin="6,12,0,0" x:Name="uiLabelLaseTimeUnits"
+                       HorizontalAlignment="Left" VerticalAlignment="Center"
+                       Style="{ThemeResource EditorParamStaticTextBlockStyle}">
+                seconds
+            </TextBlock>
+
+            <!-- Impact Azimuth -->
+            <TextBlock Grid.Row="12" Grid.Column="0" Margin="12,12,0,0" x:Name="uiLabelImpactAzimuth"
+                       VerticalAlignment="Center"
+                       Style="{ThemeResource EditorParamStaticTextBlockStyle}" >
+                Impact Azimuth
+            </TextBlock>
+            <TextBox Grid.Row="12" Grid.Column="1" Margin="12,12,0,0" Width="84" x:Name="uiTextImpactAzimuth"
+                     HorizontalAlignment="Left" VerticalAlignment="Center"
+                     Style="{StaticResource EditorParamEditTextBoxStyle}"
+                     MaxLength="3" PlaceholderText="--"
+                     LosingFocus="TextBox_LosingFocus"
+                     GotFocus="TextBox_GotFocus"
+                     Tag="ImpactAzimuth"
+                     ToolTipService.ToolTip="Azimuth of the desired impact direction (0-359)"/>
+            <TextBlock Grid.Row="12" Grid.Column="2" Margin="6,12,0,0" x:Name="uiLabelImpactAzimuthUnits"
+                       HorizontalAlignment="Left" VerticalAlignment="Center"
+                       Style="{ThemeResource EditorParamStaticTextBlockStyle}">
+                degrees
+            </TextBlock>
+
+            <!-- Impact Angle -->
+            <TextBlock Grid.Row="13" Grid.Column="0" Margin="12,12,0,0" x:Name="uiLabelImpactAngle"
+                       VerticalAlignment="Center"
+                       Style="{ThemeResource EditorParamStaticTextBlockStyle}" >
+                Impact Angle
+            </TextBlock>
+            <TextBox Grid.Row="13" Grid.Column="1" Margin="12,12,0,0" Width="84" x:Name="uiTextImpactAngle"
+                     HorizontalAlignment="Left" VerticalAlignment="Center"
+                     Style="{StaticResource EditorParamEditTextBoxStyle}"
+                     MaxLength="2" PlaceholderText="--"
+                     LosingFocus="TextBox_LosingFocus"
+                     GotFocus="TextBox_GotFocus"
+                     Tag="ImpactAngle"
+                     ToolTipService.ToolTip="Desired impact angle (30-90)"/>
+            <TextBlock Grid.Row="13" Grid.Column="2" Margin="6,12,0,0" x:Name="uiLabelImpactAngleUnits"
+                       HorizontalAlignment="Left" VerticalAlignment="Center"
+                       Style="{ThemeResource EditorParamStaticTextBlockStyle}">
+                degrees
+            </TextBlock>
+
+            <!-- Desired TOF -->
+            <TextBlock Grid.Row="14" Grid.Column="0" Margin="12,12,0,0" x:Name="uiLabelDesTOF"
+                       VerticalAlignment="Center"
+                       Style="{ThemeResource EditorParamStaticTextBlockStyle}" >
+                Desired TOF
+            </TextBlock>
+            <TextBox Grid.Row="14" Grid.Column="1" Margin="12,12,0,0" Width="84" x:Name="uiTextDesTOF"
+                     HorizontalAlignment="Left" VerticalAlignment="Center"
+                     Style="{StaticResource EditorParamEditTextBoxStyle}"
+                     MaxLength="5" PlaceholderText="--"
+                     LosingFocus="TextBox_LosingFocus"
+                     GotFocus="TextBox_GotFocus"
+                     Tag="DesTOF"
+                     ToolTipService.ToolTip="Desired time of fall (seconds, 0.00-99.9, decimals allowed)"/>
+            <TextBlock Grid.Row="14" Grid.Column="2" Margin="6,12,0,0" x:Name="uiLabelDesTOFUnits"
+                       HorizontalAlignment="Left" VerticalAlignment="Center"
+                       Style="{ThemeResource EditorParamStaticTextBlockStyle}">
+                seconds
+            </TextBlock>
+
+            <!-- Min Alt -->
+            <TextBlock Grid.Row="15" Grid.Column="0" Margin="12,12,0,0" x:Name="uiLabelMinAlt"
+                       VerticalAlignment="Center"
+                       Style="{ThemeResource EditorParamStaticTextBlockStyle}" >
+                Min Alt
+            </TextBlock>
+            <TextBox Grid.Row="15" Grid.Column="1" Margin="12,12,0,0" Width="84" x:Name="uiTextMinAlt"
+                     HorizontalAlignment="Left" VerticalAlignment="Center"
+                     Style="{StaticResource EditorParamEditTextBoxStyle}"
+                     MaxLength="5" PlaceholderText="--"
+                     LosingFocus="TextBox_LosingFocus"
+                     GotFocus="TextBox_GotFocus"
+                     Tag="MinAlt"
+                     ToolTipService.ToolTip="Minimum release altitude (0-9999)"/>
+            <TextBlock Grid.Row="15" Grid.Column="2" Margin="6,12,0,0" x:Name="uiLabelMinAltUnits"
+                       HorizontalAlignment="Left" VerticalAlignment="Center"
+                       Style="{ThemeResource EditorParamStaticTextBlockStyle}">
+                feet
+            </TextBlock>
+
+            <!-- Min TOF -->
+            <TextBlock Grid.Row="16" Grid.Column="0" Margin="12,12,0,0" x:Name="uiLabelMinTOF"
+                       VerticalAlignment="Center"
+                       Style="{ThemeResource EditorParamStaticTextBlockStyle}" >
+                Min TOF
+            </TextBlock>
+            <TextBox Grid.Row="16" Grid.Column="1" Margin="12,12,0,0" Width="84" x:Name="uiTextMinTOF"
+                     HorizontalAlignment="Left" VerticalAlignment="Center"
+                     Style="{StaticResource EditorParamEditTextBoxStyle}"
+                     MaxLength="5" PlaceholderText="--"
+                     LosingFocus="TextBox_LosingFocus"
+                     GotFocus="TextBox_GotFocus"
+                     Tag="MinTOF"
+                     ToolTipService.ToolTip="Minimum time of fall (seconds, 0.00-99.9, decimals allowed)"/>
+            <TextBlock Grid.Row="16" Grid.Column="2" Margin="6,12,0,0" x:Name="uiLabelMinTOFUnits"
+                       HorizontalAlignment="Left" VerticalAlignment="Center"
+                       Style="{ThemeResource EditorParamStaticTextBlockStyle}">
+                seconds
+            </TextBlock>
+
+            <!-- High-Drag TOF -->
+            <TextBlock Grid.Row="17" Grid.Column="0" Margin="12,12,0,0" x:Name="uiLabelHDTOF"
+                       VerticalAlignment="Center"
+                       Style="{ThemeResource EditorParamStaticTextBlockStyle}" >
+                High-Drag TOF
+            </TextBlock>
+            <TextBox Grid.Row="17" Grid.Column="1" Margin="12,12,0,0" Width="84" x:Name="uiTextHDTOF"
+                     HorizontalAlignment="Left" VerticalAlignment="Center"
+                     Style="{StaticResource EditorParamEditTextBoxStyle}"
+                     MaxLength="5" PlaceholderText="--"
+                     LosingFocus="TextBox_LosingFocus"
+                     GotFocus="TextBox_GotFocus"
+                     Tag="HDTOF"
+                     ToolTipService.ToolTip="Desired time of fall, high-drag configuration (seconds, 0.00-99.9, decimals allowed)"/>
+            <TextBlock Grid.Row="17" Grid.Column="2" Margin="6,12,0,0" x:Name="uiLabelHDTOFUnits"
+                       HorizontalAlignment="Left" VerticalAlignment="Center"
+                       Style="{ThemeResource EditorParamStaticTextBlockStyle}">
+                seconds
+            </TextBlock>
+
+            <!-- Low-Drag TOF -->
+            <TextBlock Grid.Row="18" Grid.Column="0" Margin="12,12,0,0" x:Name="uiLabelLDTOF"
+                       VerticalAlignment="Center"
+                       Style="{ThemeResource EditorParamStaticTextBlockStyle}" >
+                Low-Drag TOF
+            </TextBlock>
+            <TextBox Grid.Row="18" Grid.Column="1" Margin="12,12,0,0" Width="84" x:Name="uiTextLDTOF"
+                     HorizontalAlignment="Left" VerticalAlignment="Center"
+                     Style="{StaticResource EditorParamEditTextBoxStyle}"
+                     MaxLength="5" PlaceholderText="--"
+                     LosingFocus="TextBox_LosingFocus"
+                     GotFocus="TextBox_GotFocus"
+                     Tag="LDTOF"
+                     ToolTipService.ToolTip="Desired time of fall, low-drag configuration (seconds, 0.00-99.9, decimals allowed)"/>
+            <TextBlock Grid.Row="18" Grid.Column="2" Margin="6,12,0,0" x:Name="uiLabelLDTOFUnits"
                        HorizontalAlignment="Left" VerticalAlignment="Center"
                        Style="{ThemeResource EditorParamStaticTextBlockStyle}">
                 seconds
             </TextBlock>
 
             <!-- Reset Munition -->
-            <Button Grid.Row="11" Grid.Column="0" Grid.ColumnSpan="2" Margin="12,24,0,0" x:Name="uiMuniBtnReset"
+            <Button Grid.Row="20" Grid.Column="0" Grid.ColumnSpan="2" Margin="12,24,0,0" x:Name="uiMuniBtnReset"
                     HorizontalAlignment="Stretch"
                     Click="MuniBtnReset_Click"
                     ToolTipService.ToolTip="Reset the configuration of this munition to its defaults">
@@ -309,5 +491,6 @@ https://www.gnu.org/licenses/.
             </Button>
 
         </Grid>
+        </ScrollViewer>
     </Grid>
 </base:SystemEditorPageBase>

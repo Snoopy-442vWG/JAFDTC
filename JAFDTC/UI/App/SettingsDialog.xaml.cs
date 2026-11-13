@@ -20,6 +20,8 @@
 using JAFDTC.Utilities;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.Windows.Storage.Pickers;
+using System;
 
 namespace JAFDTC.UI.App
 {
@@ -50,6 +52,11 @@ namespace JAFDTC.UI.App
         
         public bool ISLuaUninstallRequested { get; set; }
 
+        // new data folder selected in the dialog (null if unchanged) and whether to copy existing files to it.
+        public string NewDataDirPath { get; set; }
+
+        public bool CopyDataFiles { get; set; }
+
         // ------------------------------------------------------------------------------------------------------------
         //
         // construction
@@ -68,6 +75,10 @@ namespace JAFDTC.UI.App
             IsNewVersCheckDisabled = Settings.IsNewVersCheckDisabled;
             IsLuaInstallRequested = false;
             ISLuaUninstallRequested = false;
+
+            NewDataDirPath = null;
+            CopyDataFiles = true;
+            uiSetValueDataDir.Text = FileManager.DataDirPath;
 
             uiSetValueWingName.Text = WingName;
             uiSetValueCallsign.Text = Callsign;
@@ -156,6 +167,44 @@ namespace JAFDTC.UI.App
             {
                 IsNewVersCheckDisabled = !(bool)ckbox.IsChecked;
             }
+        }
+
+        private void SelectNewDataDir(string path)
+        {
+            bool isChanged = !string.Equals(path.TrimEnd('\\', '/'), FileManager.DataDirPath.TrimEnd('\\', '/'),
+                                            System.StringComparison.OrdinalIgnoreCase);
+            NewDataDirPath = (isChanged) ? path : null;
+            uiSetValueDataDir.Text = path;
+            uiSetCkbxCopyData.IsEnabled = isChanged;
+        }
+
+        private async void SetBtnBrowseDataDir_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                FolderPicker picker = new((Application.Current as JAFDTC.App).Window.AppWindow.Id)
+                {
+                    CommitButtonText = "Select JAFDTC Data Folder",
+                    SuggestedStartLocation = PickerLocationId.DocumentsLibrary,
+                };
+                PickFolderResult result = await picker.PickSingleFolderAsync();
+                if (result != null)
+                    SelectNewDataDir(result.Path);
+            }
+            catch (System.Exception ex)
+            {
+                FileManager.Log($"SettingsDialog:SetBtnBrowseDataDir_Click exception {ex}");
+            }
+        }
+
+        private void SetBtnDefaultDataDir_Click(object sender, RoutedEventArgs e)
+        {
+            SelectNewDataDir(FileManager.DefaultDataDirPath);
+        }
+
+        private void SetCkbxCopyData_Click(object sender, RoutedEventArgs e)
+        {
+            CopyDataFiles = (bool)((CheckBox)sender).IsChecked;
         }
 
         private void SetBtnInstall_Click(object sender, RoutedEventArgs e)

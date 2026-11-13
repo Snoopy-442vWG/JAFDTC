@@ -80,7 +80,7 @@ https://www.gnu.org/licenses/.
             </Grid.ColumnDefinitions>
 
             <!-- DSMS Content Frame -->
-            <Frame x:Name="DSMSContentFrame" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" VerticalAlignment="Top" />
+            <Frame x:Name="DSMSContentFrame" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" VerticalAlignment="Stretch" />
 
             <!--
             ===============================================================================================================

@@ -706,6 +706,21 @@ namespace JAFDTC.UI.App
                 Settings.IsAlwaysOnTop = dialog.IsAppOnTop;
                 ((OverlappedPresenter)CurApp.Window.AppWindow.Presenter).IsAlwaysOnTop = Settings.IsAlwaysOnTop;
                 Settings.IsNewVersCheckDisabled = dialog.IsNewVersCheckDisabled;
+
+                // data folder change is done last so the copy includes the settings saved above. it takes effect
+                // when jafdtc restarts.
+                if (dialog.NewDataDirPath != null)
+                {
+                    string error = null;
+                    if (FileManager.ChangeDataDirPath(dialog.NewDataDirPath, dialog.CopyDataFiles, out error))
+                    {
+                        await Utilities.Message1BDialog(Content.XamlRoot, "Data Folder Changed",
+                                                        "JAFDTC will now close. Start it again to use the new data folder.");
+                        Application.Current.Exit();
+                        return;
+                    }
+                    await Utilities.Message1BDialog(Content.XamlRoot, "Data Folder Not Changed", error);
+                }
             }
             RebuildInterfaceState();
         }
@@ -723,7 +738,7 @@ namespace JAFDTC.UI.App
                              $"\n" +
                              $"On borrowed time until ED releases their native solution (2 weeks!)...\n" +
                              $"\n" +
-                             $"A Raven & fizzle & Rage / 51st VFW fork";
+                             $"A Raven & fizzle & Rage / 51st VFW fork / 442 vWG fork by Snoopy";
             await Utilities.Message1BDialog(Content.XamlRoot, $"JAFDTC {Settings.VersionJAFDTC}", content);
         }
 

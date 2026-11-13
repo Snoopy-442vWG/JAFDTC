@@ -62,6 +62,8 @@ namespace JAFDTC.Models.A10C.Upload
             AirframeDevice ap  = _aircraft.GetDevice("AUTOPILOT");
             AirframeDevice tacan  = _aircraft.GetDevice("TACAN_CTRL_PANEL");
             AirframeDevice iff  = _aircraft.GetDevice("IFF");
+            AirframeDevice lmfd = _aircraft.GetDevice("LMFD");
+            AirframeDevice rmfd = _aircraft.GetDevice("RMFD");
 
             BuildCoordSystem(cdu, _cfg.Misc);
             BuildBullseyeOnHUD(cdu, ufc, _cfg.Misc);
@@ -73,6 +75,7 @@ namespace JAFDTC.Models.A10C.Upload
             BuildAltitudeWarnings(ufc, _cfg.Misc);
             BuildTACAN(tacan, _cfg.Misc);
             BuildIFF(iff, _cfg.Misc);
+            BuildMFCDOptions(lmfd, rmfd, _cfg.Misc);
         }
 
         /// <summary>
@@ -328,6 +331,57 @@ namespace JAFDTC.Models.A10C.Upload
                         throw new ApplicationException("Unexpected TACAN Mode: " + miscSystem.TACANModeValue);
                 }
             }
+        }
+
+        // OSB (on the MFCD page-select menu) that selects each page, indexed by MFCDPageOptions
+        //
+        private static readonly Dictionary<MFCDPageOptions, string> _mfcdPageOSB = new()
+        {
+            { MFCDPageOptions.COMM, "06" },
+            { MFCDPageOptions.STAT, "07" },
+            { MFCDPageOptions.MAV,  "09" },
+            { MFCDPageOptions.CDU,  "16" },
+            { MFCDPageOptions.MSG,  "17" },
+            { MFCDPageOptions.DSMS, "18" },
+            { MFCDPageOptions.TGP,  "19" },
+            { MFCDPageOptions.TAD,  "20" }
+        };
+
+        /// <summary>
+        /// configure the page assigned to MFCD OSB 12-15 on both MFCDs according to the non-default settings
+        /// </summary>
+        private void BuildMFCDOptions(AirframeDevice lmfd, AirframeDevice rmfd, MiscSystem miscSystem)
+        {
+            BuildMFCDSide(lmfd, "LMFD", new string[] {
+                miscSystem.LeftMFCDOSB12, miscSystem.LeftMFCDOSB13, miscSystem.LeftMFCDOSB14, miscSystem.LeftMFCDOSB15 });
+            BuildMFCDSide(rmfd, "RMFD", new string[] {
+                miscSystem.RightMFCDOSB12, miscSystem.RightMFCDOSB13, miscSystem.RightMFCDOSB14, miscSystem.RightMFCDOSB15 });
+        }
+
+        private void BuildMFCDSide(AirframeDevice mfd, string prefix, string[] settings)
+        {
+            bool isAnySet = false;
+            foreach (string setting in settings)
+                isAnySet |= (!string.IsNullOrEmpty(setting) && (setting != "0"));
+            if (!isAnySet)
+                return;
+
+            // long press OSB 12 to open the page-assignment menu
+            AddAction(mfd, prefix + "_12_LONG");
+            for (int i = 0; i < settings.Length; i++)
+            {
+                if (string.IsNullOrEmpty(settings[i]) || (settings[i] == "0"))
+                    continue;
+                MFCDPageOptions page = (MFCDPageOptions)int.Parse(settings[i]);
+                if (_mfcdPageOSB.TryGetValue(page, out string pageOSB))
+                {
+                    AddAction(mfd, prefix + "_" + pageOSB);                  // pick the page from the menu...
+                    AddAction(mfd, prefix + "_" + (12 + i).ToString());      // ...and assign it to the OSB
+                }
+            }
+
+            // once the bottom layout is changed, press OSB 12 (left MFCD) or OSB 13 (right MFCD) to leave the assignment menu
+            AddAction(mfd, prefix + ((prefix == "LMFD") ? "_12" : "_13"));
         }
 
         private void BuildIFF(AirframeDevice iff, MiscSystem miscSystem)

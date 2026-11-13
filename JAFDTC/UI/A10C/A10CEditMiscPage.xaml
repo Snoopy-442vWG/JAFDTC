@@ -48,6 +48,9 @@ https://www.gnu.org/licenses/.
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
@@ -57,7 +60,7 @@ https://www.gnu.org/licenses/.
         ===============================================================================================================
         -->
 
-        <Grid Grid.Row="0" Grid.Column="0" Margin="16,8,12,8" Grid.ColumnSpan="2"
+        <Grid Grid.Row="0" Grid.Column="1" Margin="16,8,30,8"
             VerticalAlignment="Top"
             HorizontalAlignment="Left">
             <Grid.RowDefinitions>
@@ -238,7 +241,7 @@ https://www.gnu.org/licenses/.
         ===============================================================================================================
         -->
 
-        <Grid Grid.Row="0" Grid.Column="1" Margin="16,8,12,8" Grid.ColumnSpan="2"
+        <Grid Grid.Row="0" Grid.Column="2" Margin="30,8,30,8"
             VerticalAlignment="Top"
             HorizontalAlignment="Center">
             <Grid.RowDefinitions>
@@ -424,10 +427,248 @@ https://www.gnu.org/licenses/.
 
         <!--
         ===============================================================================================================
+        MFCD OSB 12-15 page assignments
+        ===============================================================================================================
+        -->
+
+        <StackPanel Grid.Row="0" Grid.Column="3" Margin="30,8,16,8" VerticalAlignment="Top" HorizontalAlignment="Left">
+        <TextBlock Style="{StaticResource EditorTitleTextBlockStyle}">
+            MFCD Layout:
+        </TextBlock>
+        <Grid Margin="0,12,0,0" HorizontalAlignment="Left">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Margin="12,0,0,0"
+                       Style="{StaticResource EditorParamStaticTextBlockStyle}"
+                       HorizontalTextAlignment="Center" FontWeight="SemiBold">
+                Left MFCD
+            </TextBlock>
+            <TextBlock Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="2" Margin="12,0,0,0"
+                       Style="{StaticResource EditorParamStaticTextBlockStyle}"
+                       HorizontalTextAlignment="Center" FontWeight="SemiBold">
+                Right MFCD
+            </TextBlock>
+                <TextBlock Grid.Row="1" Grid.Column="0" Margin="12,8,0,0"
+                           Style="{StaticResource EditorParamStaticTextBlockStyle}"
+                           HorizontalTextAlignment="Right">
+                    OSB 12
+                </TextBlock>
+                <ComboBox Grid.Row="1" Grid.Column="1" Margin="8,8,0,0" MinWidth="110"
+                          x:Name="uiComboLeftMFCDOSB12"
+                          Tag="LeftMFCDOSB12"
+                          VerticalAlignment="Center"
+                          HorizontalAlignment="Stretch"
+                          ToolTipService.ToolTip="Page assigned to left MFCD OSB 12"
+                          SelectionChanged="ComboBox_SelectionChanged">
+                    <ComboBox.Items>
+                        <!-- Must match MFCDPageOptions enum order -->
+                        <TextBlock Text="(no change)"/>
+                        <TextBlock Text="TAD"/>
+                        <TextBlock Text="TGP"/>
+                        <TextBlock Text="DSMS"/>
+                        <TextBlock Text="MSG"/>
+                        <TextBlock Text="CDU"/>
+                        <TextBlock Text="COMM"/>
+                        <TextBlock Text="STAT"/>
+                        <TextBlock Text="MAV"/>
+                    </ComboBox.Items>
+                </ComboBox>
+                <TextBlock Grid.Row="1" Grid.Column="2" Margin="12,8,0,0"
+                           Style="{StaticResource EditorParamStaticTextBlockStyle}"
+                           HorizontalTextAlignment="Right">
+                    OSB 12
+                </TextBlock>
+                <ComboBox Grid.Row="1" Grid.Column="3" Margin="8,8,0,0" MinWidth="110"
+                          x:Name="uiComboRightMFCDOSB12"
+                          Tag="RightMFCDOSB12"
+                          VerticalAlignment="Center"
+                          HorizontalAlignment="Stretch"
+                          ToolTipService.ToolTip="Page assigned to right MFCD OSB 12"
+                          SelectionChanged="ComboBox_SelectionChanged">
+                    <ComboBox.Items>
+                        <!-- Must match MFCDPageOptions enum order -->
+                        <TextBlock Text="(no change)"/>
+                        <TextBlock Text="TAD"/>
+                        <TextBlock Text="TGP"/>
+                        <TextBlock Text="DSMS"/>
+                        <TextBlock Text="MSG"/>
+                        <TextBlock Text="CDU"/>
+                        <TextBlock Text="COMM"/>
+                        <TextBlock Text="STAT"/>
+                        <TextBlock Text="MAV"/>
+                    </ComboBox.Items>
+                </ComboBox>
+                <TextBlock Grid.Row="2" Grid.Column="0" Margin="12,8,0,0"
+                           Style="{StaticResource EditorParamStaticTextBlockStyle}"
+                           HorizontalTextAlignment="Right">
+                    OSB 13
+                </TextBlock>
+                <ComboBox Grid.Row="2" Grid.Column="1" Margin="8,8,0,0" MinWidth="110"
+                          x:Name="uiComboLeftMFCDOSB13"
+                          Tag="LeftMFCDOSB13"
+                          VerticalAlignment="Center"
+                          HorizontalAlignment="Stretch"
+                          ToolTipService.ToolTip="Page assigned to left MFCD OSB 13"
+                          SelectionChanged="ComboBox_SelectionChanged">
+                    <ComboBox.Items>
+                        <!-- Must match MFCDPageOptions enum order -->
+                        <TextBlock Text="(no change)"/>
+                        <TextBlock Text="TAD"/>
+                        <TextBlock Text="TGP"/>
+                        <TextBlock Text="DSMS"/>
+                        <TextBlock Text="MSG"/>
+                        <TextBlock Text="CDU"/>
+                        <TextBlock Text="COMM"/>
+                        <TextBlock Text="STAT"/>
+                        <TextBlock Text="MAV"/>
+                    </ComboBox.Items>
+                </ComboBox>
+                <TextBlock Grid.Row="2" Grid.Column="2" Margin="12,8,0,0"
+                           Style="{StaticResource EditorParamStaticTextBlockStyle}"
+                           HorizontalTextAlignment="Right">
+                    OSB 13
+                </TextBlock>
+                <ComboBox Grid.Row="2" Grid.Column="3" Margin="8,8,0,0" MinWidth="110"
+                          x:Name="uiComboRightMFCDOSB13"
+                          Tag="RightMFCDOSB13"
+                          VerticalAlignment="Center"
+                          HorizontalAlignment="Stretch"
+                          ToolTipService.ToolTip="Page assigned to right MFCD OSB 13"
+                          SelectionChanged="ComboBox_SelectionChanged">
+                    <ComboBox.Items>
+                        <!-- Must match MFCDPageOptions enum order -->
+                        <TextBlock Text="(no change)"/>
+                        <TextBlock Text="TAD"/>
+                        <TextBlock Text="TGP"/>
+                        <TextBlock Text="DSMS"/>
+                        <TextBlock Text="MSG"/>
+                        <TextBlock Text="CDU"/>
+                        <TextBlock Text="COMM"/>
+                        <TextBlock Text="STAT"/>
+                        <TextBlock Text="MAV"/>
+                    </ComboBox.Items>
+                </ComboBox>
+                <TextBlock Grid.Row="3" Grid.Column="0" Margin="12,8,0,0"
+                           Style="{StaticResource EditorParamStaticTextBlockStyle}"
+                           HorizontalTextAlignment="Right">
+                    OSB 14
+                </TextBlock>
+                <ComboBox Grid.Row="3" Grid.Column="1" Margin="8,8,0,0" MinWidth="110"
+                          x:Name="uiComboLeftMFCDOSB14"
+                          Tag="LeftMFCDOSB14"
+                          VerticalAlignment="Center"
+                          HorizontalAlignment="Stretch"
+                          ToolTipService.ToolTip="Page assigned to left MFCD OSB 14"
+                          SelectionChanged="ComboBox_SelectionChanged">
+                    <ComboBox.Items>
+                        <!-- Must match MFCDPageOptions enum order -->
+                        <TextBlock Text="(no change)"/>
+                        <TextBlock Text="TAD"/>
+                        <TextBlock Text="TGP"/>
+                        <TextBlock Text="DSMS"/>
+                        <TextBlock Text="MSG"/>
+                        <TextBlock Text="CDU"/>
+                        <TextBlock Text="COMM"/>
+                        <TextBlock Text="STAT"/>
+                        <TextBlock Text="MAV"/>
+                    </ComboBox.Items>
+                </ComboBox>
+                <TextBlock Grid.Row="3" Grid.Column="2" Margin="12,8,0,0"
+                           Style="{StaticResource EditorParamStaticTextBlockStyle}"
+                           HorizontalTextAlignment="Right">
+                    OSB 14
+                </TextBlock>
+                <ComboBox Grid.Row="3" Grid.Column="3" Margin="8,8,0,0" MinWidth="110"
+                          x:Name="uiComboRightMFCDOSB14"
+                          Tag="RightMFCDOSB14"
+                          VerticalAlignment="Center"
+                          HorizontalAlignment="Stretch"
+                          ToolTipService.ToolTip="Page assigned to right MFCD OSB 14"
+                          SelectionChanged="ComboBox_SelectionChanged">
+                    <ComboBox.Items>
+                        <!-- Must match MFCDPageOptions enum order -->
+                        <TextBlock Text="(no change)"/>
+                        <TextBlock Text="TAD"/>
+                        <TextBlock Text="TGP"/>
+                        <TextBlock Text="DSMS"/>
+                        <TextBlock Text="MSG"/>
+                        <TextBlock Text="CDU"/>
+                        <TextBlock Text="COMM"/>
+                        <TextBlock Text="STAT"/>
+                        <TextBlock Text="MAV"/>
+                    </ComboBox.Items>
+                </ComboBox>
+                <TextBlock Grid.Row="4" Grid.Column="0" Margin="12,8,0,0"
+                           Style="{StaticResource EditorParamStaticTextBlockStyle}"
+                           HorizontalTextAlignment="Right">
+                    OSB 15
+                </TextBlock>
+                <ComboBox Grid.Row="4" Grid.Column="1" Margin="8,8,0,0" MinWidth="110"
+                          x:Name="uiComboLeftMFCDOSB15"
+                          Tag="LeftMFCDOSB15"
+                          VerticalAlignment="Center"
+                          HorizontalAlignment="Stretch"
+                          ToolTipService.ToolTip="Page assigned to left MFCD OSB 15"
+                          SelectionChanged="ComboBox_SelectionChanged">
+                    <ComboBox.Items>
+                        <!-- Must match MFCDPageOptions enum order -->
+                        <TextBlock Text="(no change)"/>
+                        <TextBlock Text="TAD"/>
+                        <TextBlock Text="TGP"/>
+                        <TextBlock Text="DSMS"/>
+                        <TextBlock Text="MSG"/>
+                        <TextBlock Text="CDU"/>
+                        <TextBlock Text="COMM"/>
+                        <TextBlock Text="STAT"/>
+                        <TextBlock Text="MAV"/>
+                    </ComboBox.Items>
+                </ComboBox>
+                <TextBlock Grid.Row="4" Grid.Column="2" Margin="12,8,0,0"
+                           Style="{StaticResource EditorParamStaticTextBlockStyle}"
+                           HorizontalTextAlignment="Right">
+                    OSB 15
+                </TextBlock>
+                <ComboBox Grid.Row="4" Grid.Column="3" Margin="8,8,0,0" MinWidth="110"
+                          x:Name="uiComboRightMFCDOSB15"
+                          Tag="RightMFCDOSB15"
+                          VerticalAlignment="Center"
+                          HorizontalAlignment="Stretch"
+                          ToolTipService.ToolTip="Page assigned to right MFCD OSB 15"
+                          SelectionChanged="ComboBox_SelectionChanged">
+                    <ComboBox.Items>
+                        <!-- Must match MFCDPageOptions enum order -->
+                        <TextBlock Text="(no change)"/>
+                        <TextBlock Text="TAD"/>
+                        <TextBlock Text="TGP"/>
+                        <TextBlock Text="DSMS"/>
+                        <TextBlock Text="MSG"/>
+                        <TextBlock Text="CDU"/>
+                        <TextBlock Text="COMM"/>
+                        <TextBlock Text="STAT"/>
+                        <TextBlock Text="MAV"/>
+                    </ComboBox.Items>
+                </ComboBox>
+        </Grid>
+        </StackPanel>
+
+        <!--
+        ===============================================================================================================
         link / reset
         ===============================================================================================================
         -->
-        <controls:LinkResetBtnsControl x:Name="uiCtlLinkResetBtns" Grid.Row="2" Grid.ColumnSpan="3"/>
+        <controls:LinkResetBtnsControl x:Name="uiCtlLinkResetBtns" Grid.Row="2" Grid.ColumnSpan="5"/>
 
     </Grid>
 </base:SystemEditorPageBase>

@@ -37,14 +37,17 @@ https://www.gnu.org/licenses/.
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition/>
-            <RowDefinition/>
-            <RowDefinition/>
-            <RowDefinition/>
-            <RowDefinition/>
-            <RowDefinition/>
-            <RowDefinition/>
-            <RowDefinition/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="0" Margin="0,12,0,0" Orientation="Horizontal"
                     HorizontalAlignment="Center">
@@ -118,5 +121,25 @@ https://www.gnu.org/licenses/.
                 Click="SetBtnUninstall_Click">
             Uninstall DCS Lua Support
         </Button>
+        <TextBlock Grid.Row="8" Margin="0,24,0,0" HorizontalAlignment="Left" TextWrapping="Wrap">
+            Data folder (configurations, settings, database)
+        </TextBlock>
+        <Grid Grid.Row="9" Margin="0,8,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <TextBox Grid.Column="0" IsReadOnly="True" x:Name="uiSetValueDataDir"
+                     ToolTipService.ToolTip="Folder where JAFDTC keeps its files"/>
+            <Button Grid.Column="1" Margin="8,0,0,0" x:Name="uiSetBtnBrowseDataDir"
+                    Click="SetBtnBrowseDataDir_Click">Browse...</Button>
+            <Button Grid.Column="2" Margin="8,0,0,0" x:Name="uiSetBtnDefaultDataDir"
+                    Click="SetBtnDefaultDataDir_Click">Default</Button>
+        </Grid>
+        <CheckBox Grid.Row="10" Margin="0,8,0,0" x:Name="uiSetCkbxCopyData" IsChecked="True" IsEnabled="False"
+                  Click="SetCkbxCopyData_Click">
+            <TextBlock TextWrapping="Wrap">Copy my existing files to the new folder (JAFDTC restarts to switch)</TextBlock>
+        </CheckBox>
     </Grid>
 </ContentDialog>

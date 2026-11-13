@@ -486,7 +486,7 @@ namespace JAFDTC.UI.App
             try
             {
                 using HttpClient client = new();
-                githubVersion = await client.GetStringAsync("https://raw.githubusercontent.com/51st-Vfw/JAFDTC/main/VERSION.txt");
+                githubVersion = await client.GetStringAsync("https://raw.githubusercontent.com/Snoopy-442vWG/JAFDTC/442-vWG-1.5.0/VERSION.txt");
             }
             catch (System.Exception ex)
             {
@@ -505,7 +505,7 @@ namespace JAFDTC.UI.App
                     Content.XamlRoot,
                     $"New Version Available",
                     $"JAFDTC version {githubVersion} and its release notes are available on GitHub at\n\n" +
-                    $"    https://github.com/51st-Vfw/JAFDTC/releases/tag/{githubVersion}\n\n" +
+                    $"    https://github.com/Snoopy-442vWG/JAFDTC/releases/tag/{githubVersion}\n\n" +
                     $"JAFDTC can download the installer package to your “Downloads” folder now if you would like.",
                     $"Download",
                     $"Skip This Version",
@@ -544,7 +544,7 @@ namespace JAFDTC.UI.App
         {
             try
             {
-                string url = $"https://github.com/51st-Vfw/JAFDTC/releases/download/{version}/JAFDTC.Installer.msi";
+                string url = $"https://github.com/Snoopy-442vWG/JAFDTC/releases/download/{version}/JAFDTC.Installer.msi";
                 string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
                                            "Downloads", $"JAFDTC.{version}.Installer.msi");
                 FileManager.Log($"Pull package remote: {url}");

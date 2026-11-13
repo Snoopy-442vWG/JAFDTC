@@ -68,6 +68,21 @@ namespace JAFDTC.Models.A10C.Misc
         Waypt = 3
     }
 
+    // defines the MFCD page options for the OSB 12-15 page-assignment slots (0 = leave the slot as is)
+    //
+    public enum MFCDPageOptions
+    {
+        None = 0,
+        TAD = 1,
+        TGP = 2,
+        DSMS = 3,
+        MSG = 4,
+        CDU = 5,
+        COMM = 6,
+        STAT = 7,
+        MAV = 8
+    }
+
     // defines the autopilot mode options
     //
     public enum AutopilotModeOptions
@@ -230,6 +245,94 @@ namespace JAFDTC.Models.A10C.Misc
             }
         }
 
+        private string _leftMFCDOSB12;                           // integer [0, 8] (MFCDPageOptions), 0 = no change
+        public string LeftMFCDOSB12
+        {
+            get => _leftMFCDOSB12;
+            set
+            {
+                string error = (string.IsNullOrEmpty(value) || IsIntegerFieldValid(value, 0, 8)) ? null : "Invalid format";
+                SetProperty(ref _leftMFCDOSB12, value, error);
+            }
+        }
+
+        private string _leftMFCDOSB13;                           // integer [0, 8] (MFCDPageOptions), 0 = no change
+        public string LeftMFCDOSB13
+        {
+            get => _leftMFCDOSB13;
+            set
+            {
+                string error = (string.IsNullOrEmpty(value) || IsIntegerFieldValid(value, 0, 8)) ? null : "Invalid format";
+                SetProperty(ref _leftMFCDOSB13, value, error);
+            }
+        }
+
+        private string _leftMFCDOSB14;                           // integer [0, 8] (MFCDPageOptions), 0 = no change
+        public string LeftMFCDOSB14
+        {
+            get => _leftMFCDOSB14;
+            set
+            {
+                string error = (string.IsNullOrEmpty(value) || IsIntegerFieldValid(value, 0, 8)) ? null : "Invalid format";
+                SetProperty(ref _leftMFCDOSB14, value, error);
+            }
+        }
+
+        private string _leftMFCDOSB15;                           // integer [0, 8] (MFCDPageOptions), 0 = no change
+        public string LeftMFCDOSB15
+        {
+            get => _leftMFCDOSB15;
+            set
+            {
+                string error = (string.IsNullOrEmpty(value) || IsIntegerFieldValid(value, 0, 8)) ? null : "Invalid format";
+                SetProperty(ref _leftMFCDOSB15, value, error);
+            }
+        }
+
+        private string _rightMFCDOSB12;                           // integer [0, 8] (MFCDPageOptions), 0 = no change
+        public string RightMFCDOSB12
+        {
+            get => _rightMFCDOSB12;
+            set
+            {
+                string error = (string.IsNullOrEmpty(value) || IsIntegerFieldValid(value, 0, 8)) ? null : "Invalid format";
+                SetProperty(ref _rightMFCDOSB12, value, error);
+            }
+        }
+
+        private string _rightMFCDOSB13;                           // integer [0, 8] (MFCDPageOptions), 0 = no change
+        public string RightMFCDOSB13
+        {
+            get => _rightMFCDOSB13;
+            set
+            {
+                string error = (string.IsNullOrEmpty(value) || IsIntegerFieldValid(value, 0, 8)) ? null : "Invalid format";
+                SetProperty(ref _rightMFCDOSB13, value, error);
+            }
+        }
+
+        private string _rightMFCDOSB14;                           // integer [0, 8] (MFCDPageOptions), 0 = no change
+        public string RightMFCDOSB14
+        {
+            get => _rightMFCDOSB14;
+            set
+            {
+                string error = (string.IsNullOrEmpty(value) || IsIntegerFieldValid(value, 0, 8)) ? null : "Invalid format";
+                SetProperty(ref _rightMFCDOSB14, value, error);
+            }
+        }
+
+        private string _rightMFCDOSB15;                           // integer [0, 8] (MFCDPageOptions), 0 = no change
+        public string RightMFCDOSB15
+        {
+            get => _rightMFCDOSB15;
+            set
+            {
+                string error = (string.IsNullOrEmpty(value) || IsIntegerFieldValid(value, 0, 8)) ? null : "Invalid format";
+                SetProperty(ref _rightMFCDOSB15, value, error);
+            }
+        }
+
         private string _iffMasterMode;                           // integer [0, 2]
         public string IFFMasterMode
         {
@@ -241,9 +344,9 @@ namespace JAFDTC.Models.A10C.Misc
             }
         }
 
-        private static readonly Regex _iffMode3CodeRegex = new(@"^[1-7][1-7][1-7][1-7]$");
+        private static readonly Regex _iffMode3CodeRegex = new(@"^[0-7][0-7][0-7][0-7]$");
 
-        private string _iffMode3Code;                           // IFF squawk, [1-7][1-7][1-7][1-7]
+        private string _iffMode3Code;                           // IFF squawk, [0-7][0-7][0-7][0-7]
         public string IFFMode3Code
         {
             get => _iffMode3Code;
@@ -252,7 +355,7 @@ namespace JAFDTC.Models.A10C.Misc
                 string error = (string.IsNullOrEmpty(value)) ? null : "Invalid format";
                 if (IsRegexFieldValid(value, _iffMode3CodeRegex))
                 {
-                    value = FixupIntegerField(value);
+                    // note: do not run through FixupIntegerField, it would strip leading zeros (valid octal digits)
                     error = null;
                 }
                 SetProperty(ref _iffMode3Code, value, error);
@@ -335,7 +438,8 @@ namespace JAFDTC.Models.A10C.Misc
                 && IsSpeedDisplayDefault && IsAapSteerPtDefault && IsAapPageDefault 
                 && IsAutopilotModeDefault && IsTACANModeDefault && IsTACANBandDefault && IsTACANChannelDefault
                 && IsIFFMasterModeDefault && IsIFFMode3CodeDefault && IsIFFMode4OnDefault
-                && IsAGLFloorDefault && IsMSLFloorDefault && IsMSLCeilingDefault;
+                && IsAGLFloorDefault && IsMSLFloorDefault && IsMSLCeilingDefault
+                && IsLeftMFCDOSB12Default && IsLeftMFCDOSB13Default && IsLeftMFCDOSB14Default && IsLeftMFCDOSB15Default && IsRightMFCDOSB12Default && IsRightMFCDOSB13Default && IsRightMFCDOSB14Default && IsRightMFCDOSB15Default;
         }
 
         [JsonIgnore]
@@ -432,6 +536,54 @@ namespace JAFDTC.Models.A10C.Misc
         public bool IsMSLCeilingDefault
         {
             get => string.IsNullOrEmpty(MSLCeiling) || MSLCeiling == ExplicitDefaults.MSLCeiling;
+        }
+
+        [JsonIgnore]
+        public bool IsLeftMFCDOSB12Default
+        {
+            get => string.IsNullOrEmpty(LeftMFCDOSB12) || LeftMFCDOSB12 == ExplicitDefaults.LeftMFCDOSB12;
+        }
+
+        [JsonIgnore]
+        public bool IsLeftMFCDOSB13Default
+        {
+            get => string.IsNullOrEmpty(LeftMFCDOSB13) || LeftMFCDOSB13 == ExplicitDefaults.LeftMFCDOSB13;
+        }
+
+        [JsonIgnore]
+        public bool IsLeftMFCDOSB14Default
+        {
+            get => string.IsNullOrEmpty(LeftMFCDOSB14) || LeftMFCDOSB14 == ExplicitDefaults.LeftMFCDOSB14;
+        }
+
+        [JsonIgnore]
+        public bool IsLeftMFCDOSB15Default
+        {
+            get => string.IsNullOrEmpty(LeftMFCDOSB15) || LeftMFCDOSB15 == ExplicitDefaults.LeftMFCDOSB15;
+        }
+
+        [JsonIgnore]
+        public bool IsRightMFCDOSB12Default
+        {
+            get => string.IsNullOrEmpty(RightMFCDOSB12) || RightMFCDOSB12 == ExplicitDefaults.RightMFCDOSB12;
+        }
+
+        [JsonIgnore]
+        public bool IsRightMFCDOSB13Default
+        {
+            get => string.IsNullOrEmpty(RightMFCDOSB13) || RightMFCDOSB13 == ExplicitDefaults.RightMFCDOSB13;
+        }
+
+        [JsonIgnore]
+        public bool IsRightMFCDOSB14Default
+        {
+            get => string.IsNullOrEmpty(RightMFCDOSB14) || RightMFCDOSB14 == ExplicitDefaults.RightMFCDOSB14;
+        }
+
+        [JsonIgnore]
+        public bool IsRightMFCDOSB15Default
+        {
+            get => string.IsNullOrEmpty(RightMFCDOSB15) || RightMFCDOSB15 == ExplicitDefaults.RightMFCDOSB15;
         }
 
         // ---- following accessors get the current value (default or non-default) for various properties
@@ -543,6 +695,14 @@ namespace JAFDTC.Models.A10C.Misc
             AGLFloor = new(other.AGLFloor);
             MSLFloor = new(other.MSLFloor);
             MSLCeiling = new(other.MSLCeiling);
+            LeftMFCDOSB12 = new(other.LeftMFCDOSB12);
+            LeftMFCDOSB13 = new(other.LeftMFCDOSB13);
+            LeftMFCDOSB14 = new(other.LeftMFCDOSB14);
+            LeftMFCDOSB15 = new(other.LeftMFCDOSB15);
+            RightMFCDOSB12 = new(other.RightMFCDOSB12);
+            RightMFCDOSB13 = new(other.RightMFCDOSB13);
+            RightMFCDOSB14 = new(other.RightMFCDOSB14);
+            RightMFCDOSB15 = new(other.RightMFCDOSB15);
          }
 
         public virtual object Clone() => new MiscSystem(this);
@@ -578,6 +738,14 @@ namespace JAFDTC.Models.A10C.Misc
             misc.AGLFloor = "500";
             misc.MSLFloor = "0";
             misc.MSLCeiling = "0";
+            misc.LeftMFCDOSB12 = "0";
+            misc.LeftMFCDOSB13 = "0";
+            misc.LeftMFCDOSB14 = "0";
+            misc.LeftMFCDOSB15 = "0";
+            misc.RightMFCDOSB12 = "0";
+            misc.RightMFCDOSB13 = "0";
+            misc.RightMFCDOSB14 = "0";
+            misc.RightMFCDOSB15 = "0";
         }
     }
 }

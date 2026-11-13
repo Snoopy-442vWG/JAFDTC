@@ -53,6 +53,20 @@ namespace JAFDTC.Models.A10C
         
         public bool Fuze { get; set; }
 
+        // dual-mode laser JDAM impact steering (IMP AZ / IMP ANG), GBU-54 only today
+        public bool ImpactParams { get; set; }
+
+        // dumb-bomb CHG SET page fields; XxxButton is the left-bezel OSB number ("16".."20") for the field
+        public bool DesTOF { get; set; }
+        public string DesTOFButton { get; set; }
+        public bool MinAltField { get; set; }
+        public string MinAltButton { get; set; }
+        public bool MinTOF { get; set; }
+        public string MinTOFButton { get; set; }
+        public bool DragTOF { get; set; }               // gates both HD TOF and LD TOF
+        public string HDTOFButton { get; set; }
+        public string LDTOFButton { get; set; }
+
         public List<string> INV_Keys { get; set; } // identifiers for this weapon on DSMS INV page
         
         //

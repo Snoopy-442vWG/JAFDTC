@@ -1,0 +1,64 @@
+﻿// ********************************************************************************************************************
+//
+// AppTypes.cs : helpful jafdtc types
+//
+// Copyright(C) 2023-2025 ilominar/raven
+//
+// This program is free software: you can redistribute it and/or modify it under the terms of the GNU General
+// Public License as published by the Free Software Foundation, either version 3 of the License, or (at your
+// option) any later version.
+//
+// This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
+// implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+// for more details.
+//
+// You should have received a copy of the GNU General Public License along with this program.  If not, see
+// <https://www.gnu.org/licenses/>.
+//
+// ********************************************************************************************************************
+
+using JAFDTC.Models.Core;
+using System.Collections.Generic;
+using System.Text.Json;
+
+namespace JAFDTC
+{
+    public static class Globals
+    {
+        public static readonly Dictionary<AirframeTypes, string> AirframeNames = new()
+        {
+            [AirframeTypes.UNKNOWN] = "",
+            [AirframeTypes.A10C] = "A-10C Warthog",
+            [AirframeTypes.AH64D] = "AH-64D Apache",
+            [AirframeTypes.F15E] = "F-15E Strike Eagle",
+            [AirframeTypes.F16C] = "F-16C Viper",
+            [AirframeTypes.FA18C] = "F/A-18C Hornet",
+        };
+
+        public static readonly Dictionary<AirframeTypes, string> AirframeShortNames = new()
+        {
+            [AirframeTypes.UNKNOWN] = "",
+            [AirframeTypes.A10C] = "A-10C",
+            [AirframeTypes.AH64D] = "AH-64D",
+            [AirframeTypes.F15E] = "F-15E",
+            [AirframeTypes.F16C] = "F-16C",
+            [AirframeTypes.FA18C] = "F/A-18C",
+        };
+
+        public static readonly Dictionary<AirframeTypes, string> AirframeDTCTypes = new()
+        {
+            [AirframeTypes.UNKNOWN] = "",
+            [AirframeTypes.A10C] = "",
+            [AirframeTypes.AH64D] = "",
+            [AirframeTypes.F15E] = "",
+            [AirframeTypes.F16C] = "F-16C_50",
+            [AirframeTypes.FA18C] = "FA-18C_hornet",
+        };
+
+        public static readonly JsonSerializerOptions JSONOptions = new() { WriteIndented = true };
+
+        public const string VersionJAFDTC = "v1.4.0";              // current version
+
+        public const string BuildJAFDTC = "version 1.4.0 of 7-Feb-26 (build e4fb773)";
+    }
+}

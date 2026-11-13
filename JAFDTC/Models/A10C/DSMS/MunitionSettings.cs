@@ -19,7 +19,9 @@
 //
 // ********************************************************************************************************************
 
+using System.Reflection;
 using System.Text.Json.Serialization;
+using System.Text.RegularExpressions;
 
 namespace JAFDTC.Models.A10C.DSMS
 {
@@ -200,10 +202,91 @@ namespace JAFDTC.Models.A10C.DSMS
             }
         }
 
+        private string _impactAzimuth;                          // integer [0, 359] degrees, "" = unset
+        public string ImpactAzimuth
+        {
+            get => _impactAzimuth;
+            set
+            {
+                string error = (string.IsNullOrEmpty(value) || IsIntegerFieldValid(value, 0, 359)) ? null : "Invalid format";
+                SetProperty(ref _impactAzimuth, value, error);
+            }
+        }
+
+        private string _impactAngle;                          // integer [30, 90] degrees, "" = unset
+        public string ImpactAngle
+        {
+            get => _impactAngle;
+            set
+            {
+                string error = (string.IsNullOrEmpty(value) || IsIntegerFieldValid(value, 30, 90)) ? null : "Invalid format";
+                SetProperty(ref _impactAngle, value, error);
+            }
+        }
+
+        private string _desTOF;                          // decimal [0.0, 99.9] seconds (up to two decimal places), "" = unset
+        public string DesTOF
+        {
+            get => _desTOF;
+            set
+            {
+                string error = (string.IsNullOrEmpty(value) || IsRegexFieldValid(value, _tofRegex)) ? null : "Invalid format";
+                SetProperty(ref _desTOF, value, error);
+            }
+        }
+
+        private string _minAlt;                          // integer [0, 9999] feet, "" = unset
+        public string MinAlt
+        {
+            get => _minAlt;
+            set
+            {
+                string error = (string.IsNullOrEmpty(value) || IsIntegerFieldValid(value, 0, 9999)) ? null : "Invalid format";
+                SetProperty(ref _minAlt, value, error);
+            }
+        }
+
+        private string _minTOF;                          // decimal [0.0, 99.9] seconds (up to two decimal places), "" = unset
+        public string MinTOF
+        {
+            get => _minTOF;
+            set
+            {
+                string error = (string.IsNullOrEmpty(value) || IsRegexFieldValid(value, _tofRegex)) ? null : "Invalid format";
+                SetProperty(ref _minTOF, value, error);
+            }
+        }
+
+        private string _hDTOF;                          // decimal [0.0, 99.9] seconds (up to two decimal places), "" = unset
+        public string HDTOF
+        {
+            get => _hDTOF;
+            set
+            {
+                string error = (string.IsNullOrEmpty(value) || IsRegexFieldValid(value, _tofRegex)) ? null : "Invalid format";
+                SetProperty(ref _hDTOF, value, error);
+            }
+        }
+
+        private string _lDTOF;                          // decimal [0.0, 99.9] seconds (up to two decimal places), "" = unset
+        public string LDTOF
+        {
+            get => _lDTOF;
+            set
+            {
+                string error = (string.IsNullOrEmpty(value) || IsRegexFieldValid(value, _tofRegex)) ? null : "Invalid format";
+                SetProperty(ref _lDTOF, value, error);
+            }
+        }
+
+        // time-of-fall fields: up to two digits with an optional single decimal place, e.g., "4", "4.5", "12.0", "0.00"
+        private static readonly Regex _tofRegex = new(@"^\d{1,2}(\.\d{1,2})?$");
+
         [JsonIgnore]
         public override bool IsDefault =>
             IsAutoLaseDefault && IsLaseSecondsDefault && IsDeliveryModeDefault && IsEscapeManeuverDefault &&
-            IsReleaseModeDefault && IsHOFOptionDefault && IsRPMOptionDefault && IsFuzeOptionDefault;
+            IsReleaseModeDefault && IsHOFOptionDefault && IsRPMOptionDefault && IsFuzeOptionDefault &&
+            IsImpactAzimuthDefault && IsImpactAngleDefault && IsDesTOFDefault && IsMinAltDefault && IsMinTOFDefault && IsHDTOFDefault && IsLDTOFDefault;
 
         /// <summary>
         /// Does this configuration require changes on the DSMS INV page?
@@ -218,14 +301,16 @@ namespace JAFDTC.Models.A10C.DSMS
         [JsonIgnore]
         public bool IsProfileDefault =>
             IsAutoLaseDefault && IsLaseSecondsDefault && IsDeliveryModeDefault && IsEscapeManeuverDefault &&
-            IsReleaseModeDefault && IsFuzeOptionDefault;
+            IsReleaseModeDefault && IsFuzeOptionDefault &&
+            IsImpactAzimuthDefault && IsImpactAngleDefault && IsDesTOFDefault && IsMinAltDefault && IsMinTOFDefault && IsHDTOFDefault && IsLDTOFDefault;
 
         /// <summary>
         /// Does this configuration require changes to the "change settings" page of the DSMS Profile?
         /// </summary>
         [JsonIgnore]
         public bool IsProfileCHGSETDefault =>
-            IsAutoLaseDefault && IsLaseSecondsDefault && IsEscapeManeuverDefault;
+            IsAutoLaseDefault && IsLaseSecondsDefault && IsEscapeManeuverDefault &&
+            IsImpactAzimuthDefault && IsImpactAngleDefault && IsDesTOFDefault && IsMinAltDefault && IsMinTOFDefault && IsHDTOFDefault && IsLDTOFDefault;
 
         [JsonIgnore]
         public A10CMunition Munition
@@ -265,6 +350,20 @@ namespace JAFDTC.Models.A10C.DSMS
         public bool IsRPMOptionDefault => string.IsNullOrEmpty(RPMOption) || RPMOption == ExplicitDefaults.RPMOption;
         [JsonIgnore]
         public bool IsFuzeOptionDefault => string.IsNullOrEmpty(FuzeOption) || FuzeOption == ExplicitDefaults.FuzeOption;
+        [JsonIgnore]
+        public bool IsImpactAzimuthDefault => string.IsNullOrEmpty(ImpactAzimuth) || ImpactAzimuth == ExplicitDefaults.ImpactAzimuth;
+        [JsonIgnore]
+        public bool IsImpactAngleDefault => string.IsNullOrEmpty(ImpactAngle) || ImpactAngle == ExplicitDefaults.ImpactAngle;
+        [JsonIgnore]
+        public bool IsDesTOFDefault => string.IsNullOrEmpty(DesTOF) || DesTOF == ExplicitDefaults.DesTOF;
+        [JsonIgnore]
+        public bool IsMinAltDefault => string.IsNullOrEmpty(MinAlt) || MinAlt == ExplicitDefaults.MinAlt;
+        [JsonIgnore]
+        public bool IsMinTOFDefault => string.IsNullOrEmpty(MinTOF) || MinTOF == ExplicitDefaults.MinTOF;
+        [JsonIgnore]
+        public bool IsHDTOFDefault => string.IsNullOrEmpty(HDTOF) || HDTOF == ExplicitDefaults.HDTOF;
+        [JsonIgnore]
+        public bool IsLDTOFDefault => string.IsNullOrEmpty(LDTOF) || LDTOF == ExplicitDefaults.LDTOF;
 
         [JsonIgnore]
         public string DefaultDeliveryMode
@@ -303,6 +402,13 @@ namespace JAFDTC.Models.A10C.DSMS
             settings.HOFOption = "6";        // 1800
             settings.RPMOption = "3";        // 1500
             settings.FuzeOption = "0";       // N/T
+            settings.ImpactAzimuth = "";
+            settings.ImpactAngle = "";
+            settings.DesTOF = "";
+            settings.MinAlt = "";
+            settings.MinTOF = "";
+            settings.HDTOF = "";
+            settings.LDTOF = "";
         }
 
 
@@ -319,6 +425,18 @@ namespace JAFDTC.Models.A10C.DSMS
         public override void Reset()
         {
             Reset(this);
+        }
+
+        /// <summary>
+        /// copy the settings (string-valued properties) from other on to this instance.
+        /// </summary>
+        public void CopyFrom(MunitionSettings other)
+        {
+            foreach (PropertyInfo prop in typeof(MunitionSettings).GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly))
+            {
+                if ((prop.PropertyType == typeof(string)) && prop.CanRead && prop.CanWrite)
+                    prop.SetValue(this, prop.GetValue(other));
+            }
         }
     }
 }

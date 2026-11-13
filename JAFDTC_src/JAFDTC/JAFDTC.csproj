@@ -1,0 +1,446 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows10.0.22621.0</TargetFramework>
+    <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
+    <RootNamespace>JAFDTC</RootNamespace>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <Platforms>x86;x64;ARM64</Platforms>
+    <RuntimeIdentifiers>win-x86;win-x64;win-arm64</RuntimeIdentifiers>
+    <UseWinUI>true</UseWinUI>
+    <EnableMsixTooling>true</EnableMsixTooling>
+    <PublishProfile>Properties\PublishProfiles\win-$(Platform).pubxml</PublishProfile>
+    <PlatformTarget>x64</PlatformTarget>
+    <ApplicationIcon>Images\JAFDTC_Icon.ico</ApplicationIcon>
+    <WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
+    <WindowsPackageType>MSIX</WindowsPackageType>
+    <SupportedOSPlatformVersion>10.0.22621.0</SupportedOSPlatformVersion>
+<AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Remove="JAFDTC\**" />
+    <Compile Remove="Models\F16C\COMM\**" />
+    <EmbeddedResource Remove="JAFDTC\**" />
+    <EmbeddedResource Remove="Models\F16C\COMM\**" />
+    <None Remove="JAFDTC\**" />
+    <None Remove="Models\F16C\COMM\**" />
+    <Page Remove="JAFDTC\**" />
+    <Page Remove="Models\F16C\COMM\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="Assets\LargeTile.scale-100.png" />
+    <None Remove="Assets\LargeTile.scale-200.png" />
+    <None Remove="Assets\LargeTile.scale-400.png" />
+    <None Remove="Assets\SmallTile.scale-100.png" />
+    <None Remove="Assets\SmallTile.scale-200.png" />
+    <None Remove="Assets\SmallTile.scale-400.png" />
+    <None Remove="Assets\SplashScreen.scale-150.png" />
+    <None Remove="Assets\SplashScreen.scale-200.png" />
+    <None Remove="Assets\SplashScreen.scale-400.png" />
+    <None Remove="Assets\Square150x150Logo.scale-100.png" />
+    <None Remove="Assets\Square150x150Logo.scale-200.png" />
+    <None Remove="Assets\Square150x150Logo.scale-400.png" />
+    <None Remove="Assets\Square44x44Logo.scale-100.png" />
+    <None Remove="Assets\Square44x44Logo.scale-200.png" />
+    <None Remove="Assets\Square44x44Logo.scale-400.png" />
+    <None Remove="Assets\Wide310x150Logo.scale-100.png" />
+    <None Remove="Assets\Wide310x150Logo.scale-200.png" />
+    <None Remove="Assets\Wide310x150Logo.scale-400.png" />
+    <None Remove="Audio\ux_action.wav" />
+    <None Remove="Audio\ux_cap_cpan.wav" />
+    <None Remove="Audio\ux_cap_wypt.wav" />
+    <None Remove="Audio\ux_error.wav" />
+    <None Remove="Data\db-a10c-munitions.json" />
+    <None Remove="Data\db-f16c-munitions.json" />
+    <None Remove="Data\db-pois-airbases.json" />
+    <None Remove="Data\db-threats.json" />
+    <None Remove="Data\kb-default-templates.zip" />
+    <None Remove="Data\params-map-tiles.json" />
+    <None Remove="DCS\DTC\F-16C_50.dtc" />
+    <None Remove="DCS\DTC\FA-18C_hornet.dtc" />
+    <None Remove="DCS\Hooks\JAFDTCStatusMsgHook.lua" />
+    <None Remove="DCS\Hooks\JAFDTCWyptCaptureHook.lua" />
+    <None Remove="DCS\JAFDTC.lua" />
+    <None Remove="DCS\JAFDTC\A10CFunctions.lua" />
+    <None Remove="DCS\JAFDTC\commonFunctions.lua" />
+    <None Remove="DCS\JAFDTC\f15EFunctions.lua" />
+    <None Remove="DCS\JAFDTC\f16CFunctions.lua" />
+    <None Remove="DCS\JAFDTC\fa18CFunctions.lua" />
+    <None Remove="DCS\JAFDTC\StatusMsg.dlg" />
+    <None Remove="DCS\JAFDTC\WyptCapture.dlg" />
+    <None Remove="Package.appxmanifest" />
+    <None Remove="UI\A10C\A10CEditDSMSMunitionSettingsPage.xaml" />
+    <None Remove="UI\A10C\A10CEditDSMSProfileOrder.xaml" />
+    <None Remove="UI\A10C\A10CEditHMCSPage.xaml" />
+    <None Remove="UI\A10C\A10CEditIFFCCPage.xaml" />
+    <None Remove="UI\A10C\A10CEditMiscPage.xaml" />
+    <None Remove="UI\A10C\A10CEditTADPage.xaml" />
+    <None Remove="UI\A10C\A10CEditTGPPage.xaml" />
+    <None Remove="UI\App\EditPilotsPage.xaml" />
+    <None Remove="UI\App\EditPointsOfInterestPage.xaml" />
+    <None Remove="UI\App\EditThreatsFilterDialog.xaml" />
+    <None Remove="UI\App\EditThreatsPage.xaml" />
+    <None Remove="UI\App\GetPoITagDetails.xaml" />
+    <None Remove="UI\App\ImportParamsNavptDialog.xaml" />
+    <None Remove="UI\App\ImportParamsThreatDialog.xaml" />
+    <None Remove="UI\App\MapSettingsDialog.xaml" />
+    <None Remove="UI\App\MapWindow.xaml" />
+    <None Remove="UI\App\PilotFilterDialog.xaml" />
+    <None Remove="UI\App\PoIChooseDialog.xaml" />
+    <None Remove="UI\Base\EditCoreMissionPage.xaml" />
+    <None Remove="UI\Base\EditNavpointListPage.xaml" />
+    <None Remove="UI\Base\EditNavpointPage.xaml" />
+    <None Remove="UI\Base\EditRadioPage.xaml" />
+    <None Remove="UI\BlankPage1.xaml" />
+    <None Remove="UI\Controls\LinkResetBtnsControl.xaml" />
+    <None Remove="UI\Controls\MultipassComboControl.xaml" />
+    <None Remove="UI\Controls\PilotComboControl.xaml" />
+    <None Remove="UI\F15E\F15EEditMiscPage.xaml" />
+    <None Remove="UI\F15E\F15EEditMPDPage.xaml" />
+    <None Remove="UI\F15E\F15EEditSteerpointListPage.xaml" />
+    <None Remove="UI\F15E\F15EEditSteerpointPage.xaml" />
+    <None Remove="UI\F15E\F15EEditUFCPage.xaml" />
+    <None Remove="UI\F16C\F16CEditHTSThreatsPage.xaml" />
+    <None Remove="UI\F16C\F16CEditSMSPage.xaml" />
+    <None Remove="UI\FA18C\FA18CEditCMSPage.xaml" />
+    <None Remove="UI\FA18C\FA18CEditPreplanPage.xaml" />
+  </ItemGroup>
+  <ItemGroup>
+    <AppxManifest Include="Package.appxmanifest">
+      <SubType>Designer</SubType>
+    </AppxManifest>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Audio\ux_action.wav" />
+    <Content Include="Audio\ux_cap_cpan.wav" />
+    <Content Include="Audio\ux_cap_wypt.wav" />
+    <Content Include="Audio\ux_error.wav" />
+    <Content Include="Data\db-f16c-emitters.json" />
+    <Content Include="Data\db-a10c-munitions.json" />
+    <Content Include="Data\db-f16c-munitions.json" />
+    <Content Include="Data\db-pois-airbases.json" />
+    <Content Include="Data\db-threats.json" />
+    <Content Include="Data\kb-default-templates.zip" />
+    <Content Include="Data\params-map-tiles.json" />
+    <Content Include="DCS\DTC\F-16C_50.dtc" />
+    <Content Include="DCS\DTC\FA-18C_hornet.dtc" />
+    <Content Include="DCS\Hooks\JAFDTCStatusMsgHook.lua" />
+    <Content Include="DCS\Hooks\JAFDTCWyptCaptureHook.lua" />
+    <Content Include="DCS\JAFDTC\A10CFunctions.lua" />
+    <Content Include="DCS\JAFDTC\StatusMsg.dlg" />
+    <Content Include="DCS\JAFDTC\JAFDTC.lua" />
+    <Content Include="DCS\JAFDTC\CommonFunctions.lua" />
+    <Content Include="DCS\JAFDTC\F15EFunctions.lua" />
+    <Content Include="DCS\JAFDTC\F16CFunctions.lua" />
+    <Content Include="DCS\JAFDTC\FA18CFunctions.lua" />
+    <Content Include="DCS\JAFDTC\WyptCapture.dlg" />
+    <Content Include="Images\JAFDTC_Icon.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CommunityToolkit.WinUI.Extensions" Version="8.2.250402" />
+    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.8.251003001" />
+    <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.6901" />
+    <PackageReference Include="XAML.MapControl.WinUI" Version="14.0.0" />
+    <Manifest Include="$(ApplicationManifest)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="UI\F16C\F16CEditHTSThreatsPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PRIResource Remove="Models\F16C\COMM\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="Assets\LargeTile.scale-125.png" />
+    <Content Remove="Assets\LargeTile.scale-150.png" />
+    <Content Remove="Assets\SmallTile.scale-125.png" />
+    <Content Remove="Assets\SmallTile.scale-150.png" />
+    <Content Remove="Assets\SplashScreen.scale-100.png" />
+    <Content Remove="Assets\SplashScreen.scale-125.png" />
+    <Content Remove="Assets\Square150x150Logo.scale-125.png" />
+    <Content Remove="Assets\Square150x150Logo.scale-150.png" />
+    <Content Remove="Assets\Square44x44Logo.altform-lightunplated_targetsize-16.png" />
+    <Content Remove="Assets\Square44x44Logo.altform-lightunplated_targetsize-24.png" />
+    <Content Remove="Assets\Square44x44Logo.altform-lightunplated_targetsize-256.png" />
+    <Content Remove="Assets\Square44x44Logo.altform-lightunplated_targetsize-32.png" />
+    <Content Remove="Assets\Square44x44Logo.altform-lightunplated_targetsize-48.png" />
+    <Content Remove="Assets\Square44x44Logo.altform-unplated_targetsize-16.png" />
+    <Content Remove="Assets\Square44x44Logo.altform-unplated_targetsize-24.png" />
+    <Content Remove="Assets\Square44x44Logo.altform-unplated_targetsize-256.png" />
+    <Content Remove="Assets\Square44x44Logo.altform-unplated_targetsize-32.png" />
+    <Content Remove="Assets\Square44x44Logo.altform-unplated_targetsize-48.png" />
+    <Content Remove="Assets\Square44x44Logo.scale-125.png" />
+    <Content Remove="Assets\Square44x44Logo.scale-150.png" />
+    <Content Remove="Assets\Square44x44Logo.targetsize-16.png" />
+    <Content Remove="Assets\Square44x44Logo.targetsize-24.png" />
+    <Content Remove="Assets\Square44x44Logo.targetsize-256.png" />
+    <Content Remove="Assets\Square44x44Logo.targetsize-32.png" />
+    <Content Remove="Assets\Square44x44Logo.targetsize-48.png" />
+    <Content Remove="Assets\StoreLogo.scale-100.png" />
+    <Content Remove="Assets\StoreLogo.scale-125.png" />
+    <Content Remove="Assets\StoreLogo.scale-150.png" />
+    <Content Remove="Assets\StoreLogo.scale-200.png" />
+    <Content Remove="Assets\StoreLogo.scale-400.png" />
+    <Content Remove="Assets\Wide310x150Logo.scale-125.png" />
+    <Content Remove="Assets\Wide310x150Logo.scale-150.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Properties\Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Images\agm-65d.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Images\agm-65g.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Images\agm-65h.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Images\agm-65k.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Images\agm-65l.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Images\agr-m282l.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Images\cbu-87-105.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Images\gbu-10-12.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Images\gbu-24.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Images\gbu-31.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Images\gbu-38.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Images\agr-m151l.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Images\gbu-54.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Images\mk-82.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Images\mk-82ab.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Images\mk-82se.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Images\mk-84.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Images\mk-84hd.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <Page Update="UI\App\PoIChooseDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="UI\Controls\MultipassComboControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="UI\Controls\PilotComboControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="UI\Base\EditCoreMissionPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="UI\App\PilotFilterDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="UI\App\EditPilotsPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="UI\Base\EditCoreKboardPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="UI\App\EditThreatsFilterDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="UI\App\EditThreatsPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="UI\App\ImportParamsNavptDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="UI\App\ImportParamsThreatDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="UI\App\MapFilterDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="UI\App\MapSettingsDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="UI\App\GetPoITagDetails.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="UI\App\ImportParamsConfigDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="UI\App\MapWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="UI\Base\EditCoreSimDTCPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="UI\F16C\F16CEditSMSPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="UI\Controls\LinkResetBtnsControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="UI\A10C\A10CEditTADPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="UI\A10C\A10CEditTGPPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="UI\A10C\A10CEditHMCSPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="UI\A10C\A10CEditDSMSProfileOrder.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="UI\A10C\A10CEditDSMSMunitionSettingsPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="UI\BlankPage1.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="UI\A10C\A10CEditMiscPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="UI\FA18C\FA18CEditPreplanPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="UI\F15E\F15EEditUFCPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="UI\F15E\F15EEditMPDPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="UI\F15E\F15EEditSteerpointPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="UI\F15E\F15EEditSteerpointListPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="UI\App\EditPointsOfInterestPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="UI\F15E\F15EEditMiscPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="UI\FA18C\FA18CEditCMSPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="UI\Base\EditRadioPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="UI\Base\EditNavpointPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="UI\Base\EditNavpointListPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <CustomAdditionalCompileInputs Remove="UI\A10C\A10CEditIFFCCPage.xaml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Remove="UI\A10C\A10CEditIFFCCPage.xaml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PRIResource Remove="JAFDTC\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\JAFDTC.Core\JAFDTC.Core.csproj" />
+    <ProjectReference Include="..\JAFDTC.File.CF\JAFDTC.File.CF.csproj" />
+    <ProjectReference Include="..\JAFDTC.File.MIZ\JAFDTC.File.MIZ.csproj" />
+    <ProjectReference Include="..\JAFDTC.File\JAFDTC.File.csproj" />
+    <ProjectReference Include="..\JAFDTC.Kneeboard\JAFDTC.Kneeboard.csproj" />
+    <ProjectReference Include="..\JAFDTC.Models\JAFDTC.Models.csproj" />
+    <ProjectReference Include="..\JAFDTC.TacView\JAFDTC.File.ACMI.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Kneeboards\" />
+  </ItemGroup>
+</Project>

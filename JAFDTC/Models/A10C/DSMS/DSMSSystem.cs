@@ -19,7 +19,9 @@
 //
 // ********************************************************************************************************************
 
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 
@@ -66,6 +68,16 @@ namespace JAFDTC.Models.A10C.DSMS
 
         public List<int> ProfileOrder { get; set; }
 
+        // custom (named) profiles the pilot wants created on the jet in addition to the jet's default profile for a
+        // munition. key is "<munition ID>|<profile name>"; the profile's settings are held in a MunitionSettings.
+        [JsonPropertyName("CustomProfiles")]
+        public Dictionary<string, MunitionSettings> CustomProfileMap
+        {
+            get => _customProfileMap;
+            set => _customProfileMap = value ?? new Dictionary<string, MunitionSettings>();
+        }
+        private Dictionary<string, MunitionSettings> _customProfileMap = new();
+
         // ---- synthesized properties
 
         public readonly static DSMSSystem ExplicitDefaults = new()
@@ -78,7 +90,7 @@ namespace JAFDTC.Models.A10C.DSMS
         {
             get
             {
-                if (!IsLaserCodeDefault || !IsProfileOrderDefault)
+                if (!IsLaserCodeDefault || !IsProfileOrderDefault || HasCustomProfiles)
                     return false;
                 return AreAllMunitionSettingsDefault;
             }
@@ -95,6 +107,8 @@ namespace JAFDTC.Models.A10C.DSMS
         {
             get
             {
+                if (HasCustomProfiles)
+                    return false;
                 foreach (MunitionSettings setting in _munitionSettingMap.Values)
                 {
                     if (!setting.IsDefault)
@@ -121,6 +135,7 @@ namespace JAFDTC.Models.A10C.DSMS
             LaserCode = other.LaserCode;
             _munitionSettingMap = other._munitionSettingMap;
             ProfileOrder = other.ProfileOrder;
+            _customProfileMap = other._customProfileMap;
         }
 
         public virtual object Clone() => new DSMSSystem(this);
@@ -173,12 +188,128 @@ namespace JAFDTC.Models.A10C.DSMS
             return settings;
         }
 
+        //
+        // custom profile accessors
+        //
+
+        /// <summary>
+        /// describes a custom profile: the munition it is built from, its name, and its settings.
+        /// </summary>
+        public class CustomProfileInfo
+        {
+            public A10CMunition Munition { get; set; }
+            public string Name { get; set; }
+            public MunitionSettings Settings { get; set; }
+        }
+
+        [JsonIgnore]
+        public bool HasCustomProfiles => (_customProfileMap != null) && (_customProfileMap.Count > 0);
+
+        private static string CustomProfileKey(A10CMunition munition, string name) => $"{munition.ID}|{name}";
+
+        /// <summary>
+        /// return the names of the custom profiles for a munition, sorted by name.
+        /// </summary>
+        public List<string> GetCustomProfileNames(A10CMunition munition)
+        {
+            string prefix = $"{munition.ID}|";
+            return _customProfileMap.Keys.Where(k => k.StartsWith(prefix, StringComparison.Ordinal))
+                                         .Select(k => k.Substring(prefix.Length))
+                                         .OrderBy(n => n, StringComparer.Ordinal).ToList();
+        }
+
+        public bool HasCustomProfile(A10CMunition munition, string name)
+            => _customProfileMap.ContainsKey(CustomProfileKey(munition, name));
+
+        /// <summary>
+        /// true if name is already used by any custom profile (for any munition).
+        /// </summary>
+        public bool IsCustomProfileNameInUse(string name)
+            => _customProfileMap.Keys.Any(k => k.Substring(k.IndexOf('|') + 1) == name);
+
+        /// <summary>
+        /// return the settings for a custom profile, or null if there is no such profile.
+        /// </summary>
+        public MunitionSettings GetCustomProfileSettings(A10CMunition munition, string name)
+        {
+            if (_customProfileMap.TryGetValue(CustomProfileKey(munition, name), out MunitionSettings settings))
+            {
+                settings.Munition = munition;
+                return settings;
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// add a custom profile (or replace the settings of an existing one), copying initial settings from seed
+        /// if provided.
+        /// </summary>
+        public MunitionSettings AddCustomProfile(A10CMunition munition, string name, MunitionSettings seed = null)
+        {
+            MunitionSettings settings = new MunitionSettings(munition);
+            if (seed != null)
+                settings.CopyFrom(seed);
+            _customProfileMap[CustomProfileKey(munition, name)] = settings;
+            return settings;
+        }
+
+        public void RemoveCustomProfile(A10CMunition munition, string name)
+            => _customProfileMap.Remove(CustomProfileKey(munition, name));
+
+        /// <summary>
+        /// return all the custom profiles in the configuration.
+        /// </summary>
+        public List<CustomProfileInfo> GetAllCustomProfiles()
+        {
+            List<CustomProfileInfo> list = new();
+            foreach (KeyValuePair<string, MunitionSettings> kv in _customProfileMap)
+            {
+                int sep = kv.Key.IndexOf('|');
+                if ((sep > 0) && int.TryParse(kv.Key.Substring(0, sep), out int munitionID))
+                {
+                    A10CMunition munition = A10CMunition.GetMunitionFromID(munitionID);
+                    kv.Value.Munition = munition;
+                    list.Add(new CustomProfileInfo()
+                    {
+                        Munition = munition,
+                        Name = kv.Key.Substring(sep + 1),
+                        Settings = kv.Value
+                    });
+                }
+            }
+            return list;
+        }
+
+        /// <summary>
+        /// make this instance's custom profiles match those of other, keeping existing settings objects where
+        /// possible so any change handlers hooked to them stay valid.
+        /// </summary>
+        public void SyncCustomProfilesFrom(DSMSSystem other)
+        {
+            foreach (string key in _customProfileMap.Keys.Where(k => !other._customProfileMap.ContainsKey(k)).ToList())
+                _customProfileMap.Remove(key);
+            foreach (KeyValuePair<string, MunitionSettings> kv in other._customProfileMap)
+            {
+                if (_customProfileMap.TryGetValue(kv.Key, out MunitionSettings mine))
+                    mine.CopyFrom(kv.Value);
+                else
+                {
+                    int sep = kv.Key.IndexOf('|');
+                    A10CMunition munition = A10CMunition.GetMunitionFromID(int.Parse(kv.Key.Substring(0, sep)));
+                    MunitionSettings copy = new MunitionSettings(munition);
+                    copy.CopyFrom(kv.Value);
+                    _customProfileMap[kv.Key] = copy;
+                }
+            }
+        }
+
         // reset the instance to defaults
         public override void Reset()
         {
             LaserCode = "";
             _munitionSettingMap = new Dictionary<int, MunitionSettings>();
             ProfileOrder = null;
+            _customProfileMap = new Dictionary<string, MunitionSettings>();
         }
 
         internal void FixupMunitionReferences()
@@ -188,6 +319,12 @@ namespace JAFDTC.Models.A10C.DSMS
             {
                 if (_munitionSettingMap.TryGetValue(munition.ID, out MunitionSettings setting))
                     setting.Munition = munition;
+            }
+            foreach (KeyValuePair<string, MunitionSettings> kv in _customProfileMap)
+            {
+                int sep = kv.Key.IndexOf('|');
+                if ((sep > 0) && int.TryParse(kv.Key.Substring(0, sep), out int munitionID))
+                    kv.Value.Munition = A10CMunition.GetMunitionFromID(munitionID);
             }
         }
 
