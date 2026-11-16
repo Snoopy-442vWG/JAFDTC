@@ -168,6 +168,17 @@ namespace JAFDTC.Models.A10C.Misc
             }
         }
 
+        private string _buildFlightPlan;                           // string (boolean)
+        public string BuildFlightPlan
+        {
+            get => _buildFlightPlan;
+            set
+            {
+                string error = (string.IsNullOrEmpty(value) || IsBooleanFieldValid(value)) ? null : "Invalid format";
+                SetProperty(ref _buildFlightPlan, value, error);
+            }
+        }
+
         private string _speedDisplay;                              // integer [0, 2]
         public string SpeedDisplay
         {
@@ -435,6 +446,7 @@ namespace JAFDTC.Models.A10C.Misc
         public override bool IsDefault
         {
             get => IsCoordSystemDefault && IsBullseyeOnHUDDefault && IsFlightPlan1ManualDefault
+                && IsBuildFlightPlanDefault
                 && IsSpeedDisplayDefault && IsAapSteerPtDefault && IsAapPageDefault 
                 && IsAutopilotModeDefault && IsTACANModeDefault && IsTACANBandDefault && IsTACANChannelDefault
                 && IsIFFMasterModeDefault && IsIFFMode3CodeDefault && IsIFFMode4OnDefault
@@ -452,6 +464,18 @@ namespace JAFDTC.Models.A10C.Misc
         public bool IsBullseyeOnHUDDefault
         {
             get => string.IsNullOrEmpty(BullseyeOnHUD) || BullseyeOnHUD == ExplicitDefaults.BullseyeOnHUD;
+        }
+
+        [JsonIgnore]
+        public bool IsBuildFlightPlanDefault
+        {
+            get => string.IsNullOrEmpty(BuildFlightPlan) || BuildFlightPlan == ExplicitDefaults.BuildFlightPlan;
+        }
+
+        [JsonIgnore]
+        public bool IsBuildFlightPlanValue
+        {
+            get => bool.Parse((string.IsNullOrEmpty(BuildFlightPlan)) ? ExplicitDefaults.BuildFlightPlan : BuildFlightPlan);
         }
 
         [JsonIgnore]
@@ -682,6 +706,7 @@ namespace JAFDTC.Models.A10C.Misc
             CoordSystem = new(other.CoordSystem);
             BullseyeOnHUD = new(other.BullseyeOnHUD);
             FlightPlan1Manual = new(other.FlightPlan1Manual);
+            BuildFlightPlan = new(other.BuildFlightPlan ?? "");
             SpeedDisplay = new(other.SpeedDisplay);
             AapSteerPt = new(other.AapSteerPt);
             AapPage = new(other.AapPage);
@@ -725,6 +750,7 @@ namespace JAFDTC.Models.A10C.Misc
             misc.CoordSystem = "0";                  // LL
             misc.BullseyeOnHUD = false.ToString();
             misc.FlightPlan1Manual = "0";            // Auto
+            misc.BuildFlightPlan = false.ToString();
             misc.SpeedDisplay = "0";                 // IAS
             misc.AapSteerPt = "0";                   // FltPlan
             misc.AapPage = "0";                      // Other

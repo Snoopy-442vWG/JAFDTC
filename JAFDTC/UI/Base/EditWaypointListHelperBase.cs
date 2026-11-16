@@ -47,5 +47,13 @@ namespace JAFDTC.UI.Base
         public abstract void AddNavpointsFromPOIs(IEnumerable<PointOfInterest> pois, IConfiguration config);
         public abstract bool PasteNavpoints(IConfiguration config, string cbData, bool isReplace = false);
         public abstract void CaptureNavpoints(IConfiguration config, WyptCaptureDataRx.WyptCaptureData[] wypts, int startIndex);
+
+        public virtual string ExtraOptionLabel => null;
+        public virtual string ExtraOptionSystemTag => null;
+        public virtual bool GetExtraOption(IConfiguration config) => false;
+        public virtual void SetExtraOption(IConfiguration config, bool value) { }
+        public virtual string ExtraOption2Label => null;
+        public virtual bool GetExtraOption2(IConfiguration config) => false;
+        public virtual void SetExtraOption2(IConfiguration config, bool value) { }
     }
 }

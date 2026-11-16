@@ -142,20 +142,26 @@ namespace JAFDTC.Models.A10C.Upload
         }
 
         /// <summary>
+        /// returns the name under which a waypoint is entered on the cdu (uppercase, letters/digits/space, must start
+        /// with a letter, at most 12 characters, defaults to WP{number}).
+        /// </summary>
+        internal static string NavpointCduName(string wyptID, string wyptName)
+        {
+            wyptName = Regex.Replace((wyptName ?? "").ToUpper(), "^[^A-Z]+", "");
+            wyptName = Regex.Replace(wyptName, "[^A-Z0-9 ]", "");
+            if (string.IsNullOrEmpty(wyptName))
+                wyptName = $"WP{wyptID}";
+            else if (wyptName.Length > 12)
+                wyptName = wyptName[..12];
+            return wyptName;
+        }
+
+        /// <summary>
         /// TODO: document
         /// </summary>
         private void BuildNewWaypointWithName(AirframeDevice cdu, string wyptID, string wyptName)
         {
-            wyptName = Regex.Replace(wyptName.ToUpper(), "^[^A-Z]+", "");
-            wyptName = Regex.Replace(wyptName, "[^A-Z0-9 ]", "");
-            if (string.IsNullOrEmpty(wyptName))
-            {
-                wyptName = $"WP{wyptID}";
-            }
-            else if (wyptName.Length > 12)
-            {
-                wyptName = wyptName[..12];
-            }
+            wyptName = NavpointCduName(wyptID, wyptName);
             AddActions(cdu, ActionsForString(wyptName), new() { "LSK_7R" });
             AddWait(WAIT_BASE);
             AddActions(cdu, new() { "CLR", "CLR" });
