@@ -150,6 +150,27 @@
 		"INV_Keys": [ "GBU-38" ]
 	},
 	{
+		"ID": 21,
+		"Name": "GBU-39",
+		"Profile": "GBU-39",
+		"DescrUI": "GBU-39/B Small Diameter Bomb (SDB) INS/GPS-Guided Bomb, 250lb",
+		"Image": "gbu-39.png",
+		"CCIP": false,
+		"CCRP": true,
+		"EscMnvr": false,
+		"AutoLase": false,
+		"ImpactParams": true,
+		"Pairs": false,
+		"Ripple": false,
+		"RipFt": false,
+		"HOF": false,
+		"RPM": false,
+		"Fuze": false,
+		"MinAltField": true,
+		"MinAltButton": "18",
+		"INV_Keys": [ "GBU-39" ]
+	},
+	{
 		"ID": 9,
 		"Name": "GBU-54",
 		"Profile": "GBU-54",
@@ -368,7 +389,7 @@
 	},
 	{
 		"ID": 19,
-		"Name": "BDU-50PO",
+		"Name": "BDU-50HD",
 		"Profile": "BDU-50PO",
 		"DescrUI": "BDU-50 High/Low-Drag (Air) Practice Bomb",
 		"Image": "bdu-50po.png",

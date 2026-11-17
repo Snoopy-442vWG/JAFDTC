@@ -108,13 +108,23 @@ https://www.gnu.org/licenses/.
         <Grid Grid.Row="1" Margin="0,12,0,0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <Grid Grid.Row="0" Margin="16,0,12,0">
+            <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="16,0,12,8">
+                <CheckBox x:Name="uiCkboxExtraOption"
+                          Visibility="Collapsed"
+                          Click="CkboxExtraOption_Click"/>
+                <CheckBox x:Name="uiCkboxExtraOption2" Margin="24,0,0,0"
+                          Visibility="Collapsed"
+                          Click="CkboxExtraOption_Click"/>
+            </StackPanel>
+
+            <Grid Grid.Row="1" Margin="16,0,12,0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="40"/>
                     <ColumnDefinition Width="*"/>
@@ -135,7 +145,7 @@ https://www.gnu.org/licenses/.
                            Text="Latitude, Longitude / Elevation"/>
             </Grid>
 
-            <ListView Grid.Row="1"
+            <ListView Grid.Row="2"
                       x:Name="uiNavptListView"
                       IsDoubleTapEnabled="True"
                       AllowDrop="True"

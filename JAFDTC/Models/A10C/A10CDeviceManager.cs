@@ -97,6 +97,8 @@ namespace JAFDTC.Models.A10C
             cdu.AddAction(3010, "NAV", delay, 1);
             cdu.AddAction(3011, "WP", delay, 1);
             cdu.AddAction(3013, "FPM", delay, 1);
+            cdu.AddAction(3062, "PG_UP", delay, 1);
+            cdu.AddAction(3063, "PG_DOWN", delay, 1);
 
             AddDevice(cdu);
 

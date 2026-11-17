@@ -102,5 +102,32 @@ namespace JAFDTC.UI.Base
         /// capture navpoints from dcs using the dcs ui.
         /// </summary>
         public void CaptureNavpoints(IConfiguration config, WyptCaptureData[] wypts, int startIndex);
+
+        /// <summary>
+        /// label for an optional airframe-specific check box shown at the top of the page, null for no check box.
+        /// </summary>
+        public string ExtraOptionLabel => null;
+
+        /// <summary>
+        /// system tag to use when saving a change to the optional check box.
+        /// </summary>
+        public string ExtraOptionSystemTag => null;
+
+        /// <summary>
+        /// current state of the optional check box.
+        /// </summary>
+        public bool GetExtraOption(IConfiguration config) => false;
+
+        /// <summary>
+        /// update the state of the optional check box in the configuration.
+        /// </summary>
+        public void SetExtraOption(IConfiguration config, bool value) { }
+
+        /// <summary>
+        /// label, state, and update for a second optional check box (saved under ExtraOptionSystemTag).
+        /// </summary>
+        public string ExtraOption2Label => null;
+        public bool GetExtraOption2(IConfiguration config) => false;
+        public void SetExtraOption2(IConfiguration config, bool value) { }
     }
 }

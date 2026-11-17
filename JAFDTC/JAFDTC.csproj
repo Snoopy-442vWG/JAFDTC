@@ -254,6 +254,9 @@
     <None Update="Images\gbu-38.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Images\gbu-39.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Images\agr-m151l.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

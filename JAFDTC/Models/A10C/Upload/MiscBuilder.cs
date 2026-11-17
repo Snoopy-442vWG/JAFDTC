@@ -18,10 +18,12 @@
 // ********************************************************************************************************************
 
 using JAFDTC.Models.A10C.Misc;
+using JAFDTC.Models.A10C.WYPT;
 using JAFDTC.Models.DCS;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace JAFDTC.Models.A10C.Upload
 {
@@ -68,6 +70,7 @@ namespace JAFDTC.Models.A10C.Upload
             BuildCoordSystem(cdu, _cfg.Misc);
             BuildBullseyeOnHUD(cdu, ufc, _cfg.Misc);
             BuildFlightPlan1Manual(cdu, _cfg.Misc);
+            BuildFlightPlans(cdu, _cfg.Misc);
             BuildSpeedDisplay(cdu, ufc, _cfg.Misc);
             BuildAapSteerPt(aap, _cfg.Misc);
             BuildAapPage(aap, _cfg.Misc);
@@ -140,6 +143,82 @@ namespace JAFDTC.Models.A10C.Upload
             {
                 AddAction(cdu, "LSK_3L");
             });
+        }
+
+        /// <summary>
+        /// builds flight plan 1 (and optionally flight plans 2 and 3) on the cdu from the waypoints in the
+        /// configuration. waypoints must already be on the jet (the waypoint system uploads first). entry 01 of
+        /// flight plan 1 (INIT POSIT) is never touched, entries start at 02.
+        /// </summary>
+        private void BuildFlightPlans(AirframeDevice cdu, MiscSystem miscSystem)
+        {
+            if (!miscSystem.IsBuildFlightPlanValue || _cfg.WYPT.Points.Count == 0)
+                return;
+
+            List<WaypointInfo> all = new();
+            foreach (WaypointInfo w in _cfg.WYPT.Points)
+                if (w.IsValid)
+                    all.Add(w);
+            if (all.Count == 0)
+                return;
+
+            AddExecFunction("NOP", new() { "==== MiscBuilder:BuildFlightPlans()" });
+
+            // plan 1: every waypoint, starting at entry 02
+            BuildOnePlan(cdu, 1, null, 2, all);
+
+            AddAction(cdu, "FPM");
+        }
+
+        /// <summary>
+        /// enters the waypoints into a flight plan, three entries per cdu page (LSK 5L/7L/9L), paging with the PG
+        /// rocker. startEntry is the 1-based entry to start at.
+        /// </summary>
+        private void BuildOnePlan(AirframeDevice cdu, int planNum, string newPlanName, int startEntry, List<WaypointInfo> wypts)
+        {
+            string[] planKeys = { "LSK_3R", "LSK_5R", "LSK_7R" };
+            string[] entryKeys = { "LSK_5L", "LSK_7L", "LSK_9L" };
+
+            AddAction(cdu, "FPM");
+            AddWait(WAIT_BASE);
+            AddActions(cdu, new() { "CLR", "CLR" });
+
+            if (newPlanName != null)
+            {
+                string planName = Regex.Replace(newPlanName.ToUpper(), "[^A-Z0-9 ]", "");
+                AddActions(cdu, ActionsForString(planName), new() { "LSK_9L" });
+                AddWait(WAIT_BASE);
+                AddActions(cdu, new() { "CLR", "CLR" });
+            }
+
+            // open FPBUILD for the plan
+            AddAction(cdu, planKeys[planNum - 1]);
+            AddWait(WAIT_BASE);
+
+            int entry = startEntry;
+            int page = (entry - 1) / 3;
+            for (int i = 0; i < page; i++)
+            {
+                AddWait(WAIT_LONG);
+                AddAction(cdu, "PG_DOWN");
+                AddWait(WAIT_LONG);
+            }
+
+            foreach (WaypointInfo wypt in wypts)
+            {
+                int wantPage = (entry - 1) / 3;
+                while (page < wantPage)
+                {
+                    AddWait(WAIT_LONG);
+                    AddAction(cdu, "PG_DOWN");
+                    AddWait(WAIT_LONG);
+                    page++;
+                }
+                string name = WYPTBuilder.NavpointCduName(wypt.Number.ToString(), wypt.Name);
+                AddActions(cdu, ActionsForString(name), new() { entryKeys[(entry - 1) % 3] });
+                AddWait(WAIT_BASE);
+                entry++;
+            }
         }
 
         /// <summary>

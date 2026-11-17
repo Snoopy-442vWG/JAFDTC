@@ -19,6 +19,7 @@
 
 using JAFDTC.Models;
 using JAFDTC.Models.A10C;
+using JAFDTC.Models.A10C.Misc;
 using JAFDTC.Models.A10C.WYPT;
 using JAFDTC.Models.Base;
 using JAFDTC.Models.POI;
@@ -50,6 +51,32 @@ namespace JAFDTC.UI.A10C
         // IEditNavpointListPageHelper
         //
         // ------------------------------------------------------------------------------------------------------------
+
+        public override string ExtraOptionLabel => "Use waypoints to create flight plan";
+
+        public override string ExtraOptionSystemTag => MiscSystem.SystemTag;
+
+        public override bool GetExtraOption(IConfiguration config)
+        {
+            return ((A10CConfiguration)config).Misc.IsBuildFlightPlanValue;
+        }
+
+        public override void SetExtraOption(IConfiguration config, bool value)
+        {
+            ((A10CConfiguration)config).Misc.BuildFlightPlan = value.ToString();
+        }
+
+        public override string ExtraOption2Label => "Set Flight Plan Sequencing Mode to Manual";
+
+        public override bool GetExtraOption2(IConfiguration config)
+        {
+            return ((A10CConfiguration)config).Misc.FlightPlan1ManualValue == FlightPlanManualOptions.Manual;
+        }
+
+        public override void SetExtraOption2(IConfiguration config, bool value)
+        {
+            ((A10CConfiguration)config).Misc.FlightPlan1Manual = (value) ? "1" : "0";
+        }
 
         public override INavpointSystemImport NavptSystem(IConfiguration config)
         {

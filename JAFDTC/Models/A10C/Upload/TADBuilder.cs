@@ -119,11 +119,12 @@ namespace JAFDTC.Models.A10C.Upload
             }
 
             // Map Range
-            if (!_cfg.TAD.IsMapRangeDefault)
+            if (!_cfg.TAD.IsMapRangeLevelDefault)
             {
-                int clicks = _cfg.TAD.MapRangeValue - TADSystem.ExplicitDefaults.MapRangeValue;
-                for (int i = 0; i < clicks; i++)
-                    AddActions(hotas, new() { "DMS_DN", "DMS_OFF" });
+                // positive clicks step the range up (DMS aft), negative clicks step it down (DMS forward)
+                int clicks = _cfg.TAD.MapRangeLevelValue - TADSystem.ExplicitDefaults.MapRangeLevelValue;
+                for (int i = 0; i < Math.Abs(clicks); i++)
+                    AddActions(hotas, new() { (clicks > 0) ? "DMS_DN" : "DMS_UP", "DMS_OFF" });
             }
 
             // Ownship Position: Center/Depress

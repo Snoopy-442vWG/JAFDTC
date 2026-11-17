@@ -173,6 +173,8 @@ namespace JAFDTC.UI.Base
             Utilities.SetEnableState(uiBarPaste, isEditable && _isClipboardValid);
             Utilities.SetEnableState(uiBarDelete, isEditable && (uiNavptListView.SelectedItems.Count > 0));
 
+            Utilities.SetEnableState(uiCkboxExtraOption, isEditable);
+            Utilities.SetEnableState(uiCkboxExtraOption2, isEditable);
             Utilities.SetEnableState(uiBarCapture, isEditable && isDCSListening);
             Utilities.SetEnableState(uiBarImport, isEditable);
             Utilities.SetEnableState(uiBarMap, (EditNavpt.Count > 0));
@@ -201,6 +203,15 @@ namespace JAFDTC.UI.Base
         /// <summary>
         /// open navpoint button or context menu edit click: open the selected navpoint.
         /// </summary>
+        private void CkboxExtraOption_Click(object sender, RoutedEventArgs args)
+        {
+            if (PageHelper.ExtraOptionLabel != null)
+                PageHelper.SetExtraOption(Config, uiCkboxExtraOption.IsChecked == true);
+            if (PageHelper.ExtraOption2Label != null)
+                PageHelper.SetExtraOption2(Config, uiCkboxExtraOption2.IsChecked == true);
+            Config.Save(this, PageHelper.ExtraOptionSystemTag);
+        }
+
         private void CmdOpen_Click(object sender, RoutedEventArgs args)
         {
             if (uiNavptListView.SelectedItem is INavpointInfo navpt)
@@ -673,6 +684,16 @@ namespace JAFDTC.UI.Base
             EditNavptDetailPage = null;
 
             NavArgs.BackButton.IsEnabled = true;
+
+            string extraLabel = PageHelper.ExtraOptionLabel;
+            uiCkboxExtraOption.Visibility = (extraLabel == null) ? Visibility.Collapsed : Visibility.Visible;
+            uiCkboxExtraOption.Content = extraLabel;
+            uiCkboxExtraOption.IsChecked = (extraLabel != null) && PageHelper.GetExtraOption(Config);
+
+            string extraLabel2 = PageHelper.ExtraOption2Label;
+            uiCkboxExtraOption2.Visibility = (extraLabel2 == null) ? Visibility.Collapsed : Visibility.Visible;
+            uiCkboxExtraOption2.Content = extraLabel2;
+            uiCkboxExtraOption2.IsChecked = (extraLabel2 != null) && PageHelper.GetExtraOption2(Config);
 
             EditNavpt.CollectionChanged += CollectionChangedHandler;
             Clipboard.ContentChanged += ClipboardChangedHandler;

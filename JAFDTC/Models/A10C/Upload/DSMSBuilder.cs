@@ -426,7 +426,7 @@ namespace JAFDTC.Models.A10C.Upload
         {
             switch (munition.ID)
             {
-                case 3: case 4: case 5: case 6: case 7: case 8: case 9:     // CBU-103, CBU-105, GBU-10/12/31/38/54
+                case 3: case 4: case 5: case 6: case 7: case 8: case 9: case 21:   // CBU-103, CBU-105, GBU-10/12/31/38/54/39
                     return 0;
                 case 10: case 11:                                           // APKWS
                     return 2;

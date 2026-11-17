@@ -56,9 +56,16 @@ namespace JAFDTC.Models.A10C.TAD
         Off
     }
 
+    // TAD range levels in nm (includes the 442 vWG mod levels below 5 nm), must match the ui order
     public enum RangeOptions
     {
-        Range5 = 0,
+        Range0_06 = 0,
+        Range0_12,
+        Range0_25,
+        Range0_5,
+        Range1,
+        Range2,
+        Range5,
         Range10,
         Range20,
         Range40,
@@ -160,14 +167,14 @@ namespace JAFDTC.Models.A10C.TAD
             }
         }
 
-        private string _mapRange;
-        public string MapRange
+        private string _mapRangeLevel;
+        public string MapRangeLevel
         {
-            get => _mapRange;
+            get => _mapRangeLevel;
             set
             {
-                string error = (string.IsNullOrEmpty(value) || IsIntegerFieldValid(value, 0, 5)) ? null : "Invalid format";
-                SetProperty(ref _mapRange, value, error);
+                string error = (string.IsNullOrEmpty(value) || IsIntegerFieldValid(value, 0, 11)) ? null : "Invalid format";
+                SetProperty(ref _mapRangeLevel, value, error);
             }
         }
 
@@ -274,7 +281,7 @@ namespace JAFDTC.Models.A10C.TAD
 
         [JsonIgnore]
         public override bool IsDefault => IsCoordDisplayDefault && IsGrpIDDefault && IsOwnIDDefault && IsCallsignDefault && IsHookOptionDefault
-            && IsHookOwnshipDefault && IsMapRangeDefault && IsCenterDepressedDefault && IsMapOptionDefault && IsProfileBullseyeDefault
+            && IsHookOwnshipDefault && IsMapRangeLevelDefault && IsCenterDepressedDefault && IsMapOptionDefault && IsProfileBullseyeDefault
             && IsProfileRangeRingsDefault && IsProfileHookInfoDefault && IsProfileWaypointLinesDefault && IsProfileWaypointLabelDefault
             && IsProfileWaypointsDefault && IsProfileSPIDisplayDefault;
 
@@ -311,9 +318,9 @@ namespace JAFDTC.Models.A10C.TAD
         public bool HookOwnshipValue => string.IsNullOrEmpty(HookOwnship) ? bool.Parse(ExplicitDefaults.HookOwnship) : bool.Parse(HookOwnship);
 
         [JsonIgnore]
-        public bool IsMapRangeDefault => string.IsNullOrEmpty(MapRange) || MapRange == ExplicitDefaults.MapRange;
+        public bool IsMapRangeLevelDefault => string.IsNullOrEmpty(MapRangeLevel) || MapRangeLevel == ExplicitDefaults.MapRangeLevel;
         [JsonIgnore]
-        public int MapRangeValue => string.IsNullOrEmpty(MapRange) ? int.Parse(ExplicitDefaults.MapRange) : int.Parse(MapRange);
+        public int MapRangeLevelValue => string.IsNullOrEmpty(MapRangeLevel) ? int.Parse(ExplicitDefaults.MapRangeLevel) : int.Parse(MapRangeLevel);
 
         [JsonIgnore]
         public bool IsCenterDepressedDefault => string.IsNullOrEmpty(CenterDepress) || CenterDepress == ExplicitDefaults.CenterDepress;
@@ -379,7 +386,7 @@ namespace JAFDTC.Models.A10C.TAD
             Callsign = other.Callsign;
             HookOption = other.HookOption;
             HookOwnship = other.HookOwnship;
-            MapRange = other.MapRange;
+            MapRangeLevel = other.MapRangeLevel;
             CenterDepress = other.CenterDepress;
             MapOption = other.MapOption;
             ProfileBullseye = other.ProfileBullseye;
@@ -432,7 +439,7 @@ namespace JAFDTC.Models.A10C.TAD
             tad.Callsign = "";
             tad.HookOption = "0";
             tad.HookOwnship = "False";
-            tad.MapRange = "0";
+            tad.MapRangeLevel = "0";                // 0.06 nm (jet starts here with the mod)
             tad.CenterDepress = "0";
             tad.MapOption = "0";
             tad.ProfileBullseye = "0";

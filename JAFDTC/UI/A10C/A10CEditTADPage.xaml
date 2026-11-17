@@ -157,10 +157,16 @@ https://www.gnu.org/licenses/.
                       VerticalAlignment="Center" 
                       HorizontalAlignment="Stretch" 
                       SelectionChanged="ComboBox_SelectionChanged" 
-                      Tag="MapRange">
+                      Tag="MapRangeLevel">
                 <ComboBox.Items>
                     <!-- Must match enum order -->
-                    <TextBlock Text="5 "/>
+                    <TextBlock Text="0.06"/>
+                    <TextBlock Text="0.12"/>
+                    <TextBlock Text="0.25"/>
+                    <TextBlock Text="0.5"/>
+                    <TextBlock Text="1"/>
+                    <TextBlock Text="2"/>
+                    <TextBlock Text="5"/>
                     <TextBlock Text="10"/>
                     <TextBlock Text="20"/>
                     <TextBlock Text="40"/>
