@@ -22,6 +22,7 @@ using JAFDTC.Models.Core;
 using JAFDTC.UI.A10C;
 using JAFDTC.UI.AH64D;
 using JAFDTC.UI.C130J;
+using JAFDTC.UI.CH47F;
 using JAFDTC.UI.App;
 using JAFDTC.UI.Base;
 using JAFDTC.UI.Controls.Map;
@@ -59,6 +60,7 @@ namespace JAFDTC.UI
                 AirframeTypes.A10C => new A10CConfigurationEditor(config, configPage),
                 AirframeTypes.AH64D => new AH64DConfigurationEditor(config, configPage),
                 AirframeTypes.C130J => new C130JConfigurationEditor(config, configPage),
+                AirframeTypes.CH47F => new CH47FConfigurationEditor(config, configPage),
                 AirframeTypes.F16C => new F16CConfigurationEditor(config, configPage),
                 AirframeTypes.F15E => new F15EConfigurationEditor(config, configPage),
                 AirframeTypes.FA18C => new FA18CConfigurationEditor(config, configPage),

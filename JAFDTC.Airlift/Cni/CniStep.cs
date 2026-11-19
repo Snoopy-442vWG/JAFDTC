@@ -27,6 +27,7 @@ namespace JAFDTC.Airlift.Cni
         Key,            // press a CNI-MU key (Key holds the key name, see CniKeys)
         Wait,           // wait Value milliseconds
         FirstPage,      // press PREV PAGE until the CNI shows page 1 (needs cockpit feedback, done in Lua)
+        Exec,           // run the airframe lua function Key with argument Arg (cockpit feedback, done in Lua)
         Note            // marker for the command log, no cockpit effect
     }
 
@@ -34,7 +35,7 @@ namespace JAFDTC.Airlift.Cni
     /// one step in a planned CNI-MU key sequence. the planner emits these; the app maps them to dcs clickable
     /// actions. ToString() gives a compact form used by the unit tests ("LSK_L1", "W200", "FIRSTPAGE", "#note").
     /// </summary>
-    public sealed record CniStep(CniStepKind Kind, string Key = null, int Value = 0)
+    public sealed record CniStep(CniStepKind Kind, string Key = null, int Value = 0, string Arg = null)
     {
         public static CniStep Press(string key) => new(CniStepKind.Key, key);
 
@@ -44,11 +45,14 @@ namespace JAFDTC.Airlift.Cni
 
         public static CniStep Note(string text) => new(CniStepKind.Note, text);
 
+        public static CniStep Exec(string fn, string arg) => new(CniStepKind.Exec, fn, 0, arg);
+
         public override string ToString() => Kind switch
         {
             CniStepKind.Key => Key,
             CniStepKind.Wait => $"W{Value}",
             CniStepKind.FirstPage => "FIRSTPAGE",
+            CniStepKind.Exec => $"{Key}({Arg})",
             _ => $"#{Key}"
         };
     }
@@ -66,6 +70,13 @@ namespace JAFDTC.Airlift.Cni
         public const string NEXT = "NEXT";
         public const string PREV = "PREV";
         public const string COMM_TUNE = "COMM_TUNE";
+        public const string IDX = "IDX";                            // ch-47f cdu
+        public const string FPLN = "FPLN";                          // ch-47f cdu
+        public const string MSN = "MSN";                            // ch-47f cdu
+        public const string UP = "UP";                              // ch-47f cdu
+        public const string DOWN = "DOWN";                          // ch-47f cdu
+        public const string ARC186_MODE_MANUAL = "ARC186_MODE_MANUAL";  // ch-47f arc-186 mode knob (other device)
+        public const string ARC186_MODE_PRESET = "ARC186_MODE_PRESET";
         public const string SLASH = "/";
         public const string POINT = ".";
 

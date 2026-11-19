@@ -23,6 +23,7 @@ using JAFDTC.Kneeboard.Models;
 using JAFDTC.Models.A10C;
 using JAFDTC.Models.AH64D;
 using JAFDTC.Models.C130J;
+using JAFDTC.Models.CH47F;
 using JAFDTC.Models.Base;
 using JAFDTC.Models.Core;
 using JAFDTC.Models.CoreApp;
@@ -513,6 +514,7 @@ namespace JAFDTC.Models
                 AirframeTypes.A10C  => new A10CConfiguration(Guid.NewGuid().ToString(), name, [ ]),
                 AirframeTypes.AH64D => new AH64DConfiguration(Guid.NewGuid().ToString(), name, [ ]),
                 AirframeTypes.C130J => new C130JConfiguration(Guid.NewGuid().ToString(), name, [ ]),
+                AirframeTypes.CH47F => new CH47FConfiguration(Guid.NewGuid().ToString(), name, [ ]),
                 AirframeTypes.F15E  => new F15EConfiguration(Guid.NewGuid().ToString(), name, [ ]),
                 AirframeTypes.F16C  => new F16CConfiguration(Guid.NewGuid().ToString(), name, [ ]),
                 AirframeTypes.FA18C => new FA18CConfiguration(Guid.NewGuid().ToString(), name, [ ]),
@@ -534,6 +536,7 @@ namespace JAFDTC.Models
                     AirframeTypes.A10C  => JsonSerializer.Deserialize<A10CConfiguration>(json),
                     AirframeTypes.AH64D => JsonSerializer.Deserialize<AH64DConfiguration>(json),
                     AirframeTypes.C130J => JsonSerializer.Deserialize<C130JConfiguration>(json),
+                    AirframeTypes.CH47F => JsonSerializer.Deserialize<CH47FConfiguration>(json),
                     AirframeTypes.F15E  => JsonSerializer.Deserialize<F15EConfiguration>(json),
                     AirframeTypes.F16C  => JsonSerializer.Deserialize<F16CConfiguration>(json),
                     AirframeTypes.FA18C => JsonSerializer.Deserialize<FA18CConfiguration>(json),

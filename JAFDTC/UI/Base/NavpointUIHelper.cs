@@ -393,6 +393,7 @@ namespace JAFDTC.UI.Base
                     {
                         AirframeTypes.A10C => ["A-10C_2"],
                         AirframeTypes.C130J => ["C-130J-30"],
+                        AirframeTypes.CH47F => ["CH-47Fbl1"],
                         AirframeTypes.F15E => ["F-15ESE"],
                         AirframeTypes.F16C => ["F-16C_50"],
                         AirframeTypes.FA18C => ["FA-18C_hornet"],
