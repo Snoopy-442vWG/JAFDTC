@@ -108,6 +108,12 @@ namespace JAFDTC.Models
         public IUploadAgent UploadAgent { get; }
 
         /// <summary>
+        /// reason the last SaveMergedSimDTC() failed, null if it succeeded.
+        /// </summary>
+        [JsonIgnore]
+        public string LastSimDTCError { get; }
+
+        /// <summary>
         /// provides a Segoe Fluent Icon glyph to use to mark the favorite status of the configuration in the ui.
         /// </summary>
         [JsonIgnore]

@@ -49,7 +49,7 @@ namespace JAFDTC
         {
             [AirframeTypes.UNKNOWN] = "",
             [AirframeTypes.A10C] = "",
-            [AirframeTypes.AH64D] = "",
+            [AirframeTypes.AH64D] = "AH-64D_BLK_II",
             [AirframeTypes.F15E] = "",
             [AirframeTypes.F16C] = "F-16C_50",
             [AirframeTypes.FA18C] = "FA-18C_hornet",

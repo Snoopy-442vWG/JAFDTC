@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    JAFDTC.AH64D : airframe-independent support for the DCS AH-64D (BLK.II) native Data Transfer Cartridge (.dtc).
+
+    This library has no WinUI dependency so the conversion logic (DCS theater projections, MGRS, the AH-64D point
+    IDENT table, .dtc import / merge, worksheet CSV import / export) can be unit tested on its own. The JAFDTC app
+    wraps it with configuration systems and editor pages.
+  -->
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>disable</Nullable>
+    <RootNamespace>JAFDTC.AH64D</RootNamespace>
+    <Platforms>AnyCPU;x64;x86;ARM64</Platforms>
+  </PropertyGroup>
+
+</Project>

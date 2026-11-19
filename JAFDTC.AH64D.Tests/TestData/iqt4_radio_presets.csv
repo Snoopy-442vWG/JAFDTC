@@ -1,0 +1,11 @@
+Preset,UnitID,CallSign,Primary,DLNet,VHF,UHF,FM1,FM2,Notes
+1,ETAR GND,RMGND,UHF,No,,300.65,,,Ramstein Ground. Initial UHF.
+2,ETAR TWR,RMTWR,UHF,No,133.2,356.85,,,Ramstein Tower.
+3,LANGEN,LANGN,UHF,No,,375.7,,,Langen Control.
+4,SPADES,SPADE,UHF,No,,342.3,,,Baumholder range control.
+5,PNTHR32B,P32B,UHF,No,,361.6,,,Range 32B controller.
+6,ACE,ACE,UHF,No,127.5,340.3,,,Hammelburg range control.
+7,MAGIC,MAGIC,UHF,No,,263.0,,,AWACS (IFG). Mission E-3A still on 251.000 - open fix.
+8,HELO CMN,HELO,FM1,Yes,,,75.5,,Helo Common (Checkmate AH-64 common). Datalink (IDM) net.
+9,442WG AM,ACE,FM1,No,,,47.6,,442 Wing Common. Call sign ACE as in the file (same as preset 6).
+10,RAMDATIS,DATIS,UHF,No,,374.375,,,Ramstein D-ATIS (receive only).

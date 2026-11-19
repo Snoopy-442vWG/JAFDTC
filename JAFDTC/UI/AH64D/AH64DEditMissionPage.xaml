@@ -1,0 +1,534 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+**********************************************************************************************************************
+
+AH64DEditMissionPage.xaml : ui xaml for the AH-64D dtc mission (points, routes, lines, areas / zones, adf) editor
+
+Copyright(C) 2026 442 vWG
+
+This program is free software: you can redistribute it and/or modify it under the terms of the GNU General
+Public License as published by the Free Software Foundation, either version 3 of the License, or (at your
+option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
+implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
+You should have received a copy of the GNU General Public License along with this program.  If not, see
+https://www.gnu.org/licenses/.
+
+**********************************************************************************************************************
+-->
+<ui_base:SystemEditorPageBase
+    x:Class="JAFDTC.UI.AH64D.AH64DEditMissionPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:ui_base="using:JAFDTC.UI.Base"
+    xmlns:controls="using:JAFDTC.UI.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource SystemControlBackgroundChromeMediumLowBrush}">
+
+    <Page.Resources>
+        <Style x:Key="ApColHdr" TargetType="TextBlock" BasedOn="{StaticResource TableHeaderTextStyle}">
+            <Setter Property="Margin" Value="4,0,0,0"/>
+        </Style>
+        <Style x:Key="ApCell" TargetType="TextBlock">
+            <Setter Property="Margin" Value="4,0,0,0"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+        </Style>
+        <Style x:Key="ApLabel" TargetType="TextBlock" BasedOn="{StaticResource EditorParamStaticTextBlockStyle}">
+            <Setter Property="Margin" Value="0,10,8,0"/>
+            <Setter Property="HorizontalTextAlignment" Value="Right"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+        <Style x:Key="ApField" TargetType="TextBox">
+            <Setter Property="Margin" Value="0,10,0,0"/>
+        </Style>
+    </Page.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!--
+        ===============================================================================================================
+        row 0 : theater, import / export
+        ===============================================================================================================
+        -->
+        <Grid Grid.Row="0" Margin="16,8,12,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0" VerticalAlignment="Center" Margin="0,0,8,0"
+                       Style="{StaticResource EditorParamStaticTextBlockStyle}">
+                DCS Theater
+            </TextBlock>
+            <ComboBox Grid.Column="1" x:Name="uiComboTheater" Width="200" VerticalAlignment="Center"
+                      SelectionChanged="ComboTheater_SelectionChanged"
+                      ToolTipService.ToolTip="The DCS map this mission is for. The .dtc stores DCS map x/y coordinates, so this must match the mission's map."/>
+            <CommandBar Grid.Column="2" HorizontalAlignment="Right" DefaultLabelPosition="Right">
+                <AppBarButton x:Name="uiBarImportDtc" Icon="Download" Label="Import .dtc"
+                              Click="CmdImportDtc_Click"
+                              ToolTipService.ToolTip="Replace this mission with Mission 1 or Mission 2 from a DCS AH-64D .dtc file"/>
+                <AppBarButton x:Name="uiBarImportCsv" Label="Import CSV"
+                              Click="CmdImportCsv_Click"
+                              ToolTipService.ToolTip="Add points (TSD CP, IDENT, FREE Text, Name, MGRS, Elev_ft) or a route (Route, #, TSD CP, ...) from a worksheet CSV">
+                    <AppBarButton.Icon>
+                        <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE9F9;"/>
+                    </AppBarButton.Icon>
+                </AppBarButton>
+                <AppBarButton x:Name="uiBarExportCsv" Icon="Save" Label="Export CSV"
+                              Click="CmdExportCsv_Click"
+                              ToolTipService.ToolTip="Save the points and routes as worksheet CSV files (8-digit MGRS)"/>
+                <AppBarButton x:Name="uiBarCopyOther" Icon="Copy" Label="Copy From Other Mission"
+                              Click="CmdCopyOther_Click"
+                              ToolTipService.ToolTip="Replace this mission with a copy of the other DTC mission"/>
+            </CommandBar>
+        </Grid>
+
+        <!--
+        ===============================================================================================================
+        row 1 : tabs
+        ===============================================================================================================
+        -->
+        <Pivot Grid.Row="1" x:Name="uiPivot" Margin="4,0,4,0">
+
+            <!-- ======================================== POINTS ======================================== -->
+            <PivotItem Header="Points">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="360"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <StackPanel Grid.Row="0" Grid.ColumnSpan="2" Orientation="Horizontal" Margin="0,4,0,6">
+                        <TextBlock VerticalAlignment="Center" Margin="0,0,12,0"
+                                   Style="{StaticResource EditorParamStaticTextBlockStyle}">Load to aircraft:</TextBlock>
+                        <CheckBox x:Name="uiCkLoadW" Content="Waypoints / Hazards" Click="CkLoad_Click"
+                                  ToolTipService.ToolTip="WPTHZ isEnabled: load the W/H database from this DTC"/>
+                        <CheckBox x:Name="uiCkLoadC" Content="Control Measures" Click="CkLoad_Click" Margin="12,0,0,0"
+                                  ToolTipService.ToolTip="CTRLM isEnabled. Note: DCS also fills C51-C99 with mission units that are not hidden on the MFD."/>
+                        <CheckBox x:Name="uiCkLoadT" Content="Targets / Threats" Click="CkLoad_Click" Margin="12,0,0,0"
+                                  ToolTipService.ToolTip="TGT isEnabled: load the T database from this DTC"/>
+                    </StackPanel>
+
+                    <Grid Grid.Row="1" Grid.Column="0" Margin="0,0,12,4">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="50"/>
+                            <ColumnDefinition Width="50"/>
+                            <ColumnDefinition Width="50"/>
+                            <ColumnDefinition Width="150"/>
+                            <ColumnDefinition Width="70"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Style="{StaticResource ApColHdr}" Text="Point"/>
+                        <TextBlock Grid.Column="1" Style="{StaticResource ApColHdr}" Text="IDENT"/>
+                        <TextBlock Grid.Column="2" Style="{StaticResource ApColHdr}" Text="Free"/>
+                        <TextBlock Grid.Column="3" Style="{StaticResource ApColHdr}" Text="MGRS"/>
+                        <TextBlock Grid.Column="4" Style="{StaticResource ApColHdr}" Text="Elev ft"/>
+                        <TextBlock Grid.Column="5" Style="{StaticResource ApColHdr}" Text="Note"/>
+                    </Grid>
+                    <ListView Grid.Row="2" Grid.Column="0" x:Name="uiListPoints" Margin="0,0,12,0"
+                              SelectionMode="Extended" SelectionChanged="ListPoints_SelectionChanged">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="50"/>
+                                        <ColumnDefinition Width="50"/>
+                                        <ColumnDefinition Width="50"/>
+                                        <ColumnDefinition Width="150"/>
+                                        <ColumnDefinition Width="70"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0" Style="{StaticResource ApCell}" Text="{Binding Label}" FontWeight="SemiBold"/>
+                                    <TextBlock Grid.Column="1" Style="{StaticResource ApCell}" Text="{Binding Ident}"/>
+                                    <TextBlock Grid.Column="2" Style="{StaticResource ApCell}" Text="{Binding Free}"/>
+                                    <TextBlock Grid.Column="3" Style="{StaticResource ApCell}" Text="{Binding Mgrs}" FontFamily="Consolas"/>
+                                    <TextBlock Grid.Column="4" Style="{StaticResource ApCell}" Text="{Binding Alt}"/>
+                                    <TextBlock Grid.Column="5" Style="{StaticResource ApCell}" Text="{Binding Note}"/>
+                                </Grid>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+
+                    <ScrollViewer Grid.Row="1" Grid.RowSpan="2" Grid.Column="1" x:Name="uiPanelPoint">
+                        <Grid Margin="0,0,8,8">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="90"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition/><RowDefinition/><RowDefinition/><RowDefinition/><RowDefinition/>
+                                <RowDefinition/><RowDefinition/><RowDefinition/><RowDefinition/><RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <TextBlock Grid.Row="0" Style="{StaticResource ApLabel}">Database</TextBlock>
+                            <ComboBox Grid.Row="0" Grid.Column="1" x:Name="uiPtCategory" Margin="0,10,0,0"
+                                      HorizontalAlignment="Stretch" SelectionChanged="PtCategory_SelectionChanged">
+                                <ComboBoxItem Content="W / H  - Waypoint / Hazard (W01-W50)"/>
+                                <ComboBoxItem Content="C  - Control Measure (C51-C99)"/>
+                                <ComboBoxItem Content="T  - Target / Threat (T01-T50)"/>
+                            </ComboBox>
+                            <TextBlock Grid.Row="1" Style="{StaticResource ApLabel}">Number</TextBlock>
+                            <TextBox Grid.Row="1" Grid.Column="1" x:Name="uiPtNumber" Style="{StaticResource ApField}"
+                                     Width="80" HorizontalAlignment="Left" MaxLength="2"
+                                     ToolTipService.ToolTip="W/T: 1-50, C: 51-99"/>
+                            <TextBlock Grid.Row="2" Style="{StaticResource ApLabel}">IDENT</TextBlock>
+                            <ComboBox Grid.Row="2" Grid.Column="1" x:Name="uiPtIdent" Margin="0,10,0,0"
+                                      HorizontalAlignment="Stretch" MaxDropDownHeight="420"/>
+                            <TextBlock Grid.Row="3" Style="{StaticResource ApLabel}">Free Text</TextBlock>
+                            <TextBox Grid.Row="3" Grid.Column="1" x:Name="uiPtFree" Style="{StaticResource ApField}"
+                                     Width="80" HorizontalAlignment="Left" MaxLength="3" CharacterCasing="Upper"
+                                     ToolTipService.ToolTip="Up to 3 letters / digits shown with the TSD symbol"/>
+                            <TextBlock Grid.Row="4" Style="{StaticResource ApLabel}">Note</TextBlock>
+                            <TextBox Grid.Row="4" Grid.Column="1" x:Name="uiPtNote" Style="{StaticResource ApField}"
+                                     ToolTipService.ToolTip="Description stored with the point (shown in the DCS DTC manager)"/>
+                            <TextBlock Grid.Row="5" Style="{StaticResource ApLabel}">MGRS</TextBlock>
+                            <TextBox Grid.Row="5" Grid.Column="1" x:Name="uiPtMgrs" Style="{StaticResource ApField}"
+                                     FontFamily="Consolas" CharacterCasing="Upper" PlaceholderText="32U LV 9850 7696"
+                                     LostFocus="PtMgrs_LostFocus"
+                                     ToolTipService.ToolTip="MGRS with grid zone (2 to 10 digits). 8 digits matches the KU."/>
+                            <TextBlock Grid.Row="6" Style="{StaticResource ApLabel}">Lat, Lon</TextBlock>
+                            <TextBox Grid.Row="6" Grid.Column="1" x:Name="uiPtLatLon" Style="{StaticResource ApField}"
+                                     FontFamily="Consolas" PlaceholderText="49.436899, 7.600077"
+                                     LostFocus="PtLatLon_LostFocus"
+                                     ToolTipService.ToolTip="Decimal degrees, WGS-84 (alternative to MGRS)"/>
+                            <TextBlock Grid.Row="7" Style="{StaticResource ApLabel}">Elevation</TextBlock>
+                            <StackPanel Grid.Row="7" Grid.Column="1" Orientation="Horizontal">
+                                <TextBox x:Name="uiPtAlt" Style="{StaticResource ApField}" Width="100" MaxLength="6"
+                                         ToolTipService.ToolTip="Point elevation, feet MSL"/>
+                                <TextBlock Margin="8,10,0,0" VerticalAlignment="Center">ft MSL</TextBlock>
+                            </StackPanel>
+                            <StackPanel Grid.Row="8" Grid.ColumnSpan="2" Orientation="Horizontal" Margin="0,16,0,0"
+                                        HorizontalAlignment="Right">
+                                <Button x:Name="uiPtNew" Content="New" Click="PtNew_Click" Margin="0,0,8,0"
+                                        ToolTipService.ToolTip="Clear the editor for a new point (next free number)"/>
+                                <Button x:Name="uiPtDelete" Content="Delete" Click="PtDelete_Click" Margin="0,0,8,0"
+                                        ToolTipService.ToolTip="Delete the selected point(s)"/>
+                                <Button x:Name="uiPtSave" Content="Save Point" Click="PtSave_Click"
+                                        Style="{StaticResource AccentButtonStyle}"
+                                        ToolTipService.ToolTip="Add the point, or replace the point with the same number"/>
+                            </StackPanel>
+                            <TextBlock Grid.Row="9" Grid.ColumnSpan="2" x:Name="uiPtStatus" Margin="0,8,0,0"
+                                       TextWrapping="Wrap" Foreground="{ThemeResource SystemFillColorCriticalBrush}"/>
+                        </Grid>
+                    </ScrollViewer>
+                </Grid>
+            </PivotItem>
+
+            <!-- ======================================== ROUTES ======================================== -->
+            <PivotItem Header="Routes">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="360"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <StackPanel Grid.Row="0" Grid.ColumnSpan="2" Orientation="Horizontal" Margin="0,4,0,6">
+                        <TextBlock VerticalAlignment="Center" Margin="0,0,8,0"
+                                   Style="{StaticResource EditorParamStaticTextBlockStyle}">Route</TextBlock>
+                        <ComboBox x:Name="uiRtSelect" Width="220" SelectionChanged="RtSelect_SelectionChanged"/>
+                        <TextBlock VerticalAlignment="Center" Margin="20,0,8,0"
+                                   Style="{StaticResource EditorParamStaticTextBlockStyle}">Name</TextBlock>
+                        <TextBox x:Name="uiRtName" Width="90" MaxLength="5" CharacterCasing="Upper"
+                                 LostFocus="RtProps_LostFocus" ToolTipService.ToolTip="Route name, up to 5 characters"/>
+                        <TextBlock VerticalAlignment="Center" Margin="20,0,8,0"
+                                   Style="{StaticResource EditorParamStaticTextBlockStyle}">Start</TextBlock>
+                        <TextBox x:Name="uiRtStart" Width="100" MaxLength="8" PlaceholderText="13:00:00"
+                                 LostFocus="RtProps_LostFocus"
+                                 ToolTipService.ToolTip="Time at the first route point (HH:MM or HH:MM:SS)"/>
+                        <CheckBox x:Name="uiRtEnabled" Content="Load this route" Margin="20,0,0,0" Click="RtEnabled_Click"/>
+                    </StackPanel>
+
+                    <Grid Grid.Row="1" Grid.Column="0" Margin="0,0,12,4">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="40"/>
+                            <ColumnDefinition Width="56"/>
+                            <ColumnDefinition Width="56"/>
+                            <ColumnDefinition Width="56"/>
+                            <ColumnDefinition Width="70"/>
+                            <ColumnDefinition Width="70"/>
+                            <ColumnDefinition Width="70"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Style="{StaticResource ApColHdr}" Text="#"/>
+                        <TextBlock Grid.Column="1" Style="{StaticResource ApColHdr}" Text="Point"/>
+                        <TextBlock Grid.Column="2" Style="{StaticResource ApColHdr}" Text="IDENT"/>
+                        <TextBlock Grid.Column="3" Style="{StaticResource ApColHdr}" Text="Free"/>
+                        <TextBlock Grid.Column="4" Style="{StaticResource ApColHdr}" Text="Speed kt"/>
+                        <TextBlock Grid.Column="5" Style="{StaticResource ApColHdr}" Text="Leg nm"/>
+                        <TextBlock Grid.Column="6" Style="{StaticResource ApColHdr}" Text="ETE"/>
+                        <TextBlock Grid.Column="7" Style="{StaticResource ApColHdr}" Text="Note"/>
+                    </Grid>
+                    <ListView Grid.Row="2" Grid.Column="0" x:Name="uiListRoute" Margin="0,0,12,0"
+                              SelectionMode="Single" SelectionChanged="ListRoute_SelectionChanged">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="40"/>
+                                        <ColumnDefinition Width="56"/>
+                                        <ColumnDefinition Width="56"/>
+                                        <ColumnDefinition Width="56"/>
+                                        <ColumnDefinition Width="70"/>
+                                        <ColumnDefinition Width="70"/>
+                                        <ColumnDefinition Width="70"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0" Style="{StaticResource ApCell}" Text="{Binding Seq}"/>
+                                    <TextBlock Grid.Column="1" Style="{StaticResource ApCell}" Text="{Binding Label}" FontWeight="SemiBold"/>
+                                    <TextBlock Grid.Column="2" Style="{StaticResource ApCell}" Text="{Binding Ident}"/>
+                                    <TextBlock Grid.Column="3" Style="{StaticResource ApCell}" Text="{Binding Free}"/>
+                                    <TextBlock Grid.Column="4" Style="{StaticResource ApCell}" Text="{Binding Speed}"/>
+                                    <TextBlock Grid.Column="5" Style="{StaticResource ApCell}" Text="{Binding Leg}"/>
+                                    <TextBlock Grid.Column="6" Style="{StaticResource ApCell}" Text="{Binding Ete}"/>
+                                    <TextBlock Grid.Column="7" Style="{StaticResource ApCell}" Text="{Binding Note}"/>
+                                </Grid>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                    <TextBlock Grid.Row="3" Grid.Column="0" x:Name="uiRtTotals" Margin="4,6,0,0"
+                               Style="{StaticResource EditorParamStaticTextBlockStyle}"/>
+
+                    <StackPanel Grid.Row="1" Grid.RowSpan="3" Grid.Column="1" x:Name="uiPanelRoute">
+                        <TextBlock Style="{StaticResource EditorParamStaticTextBlockStyle}" Margin="0,4,0,0"
+                                   TextWrapping="Wrap">
+                            Routes use points from the W/H (W01-W50) and control measure (C51-C99) databases.
+                        </TextBlock>
+                        <TextBlock Style="{StaticResource ApLabel}" HorizontalTextAlignment="Left">Point</TextBlock>
+                        <ComboBox x:Name="uiRtAddPoint" HorizontalAlignment="Stretch" Margin="0,4,0,0"
+                                  MaxDropDownHeight="420"/>
+                        <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+                            <TextBlock VerticalAlignment="Center" Margin="0,0,8,0"
+                                       Style="{StaticResource EditorParamStaticTextBlockStyle}">Speed</TextBlock>
+                            <TextBox x:Name="uiRtSpeed" Width="70" MaxLength="3" Text="80"/>
+                            <TextBlock VerticalAlignment="Center" Margin="6,0,0,0">kt</TextBlock>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="0,12,0,0">
+                            <Button Content="Add To End" Click="RtAdd_Click" Margin="0,0,8,0"
+                                    Style="{StaticResource AccentButtonStyle}"/>
+                            <Button Content="Insert Before" Click="RtInsert_Click" Margin="0,0,8,0"
+                                    ToolTipService.ToolTip="Insert before the selected route point"/>
+                            <Button Content="Set Speed" Click="RtSetSpeed_Click"
+                                    ToolTipService.ToolTip="Apply the speed to the selected route point"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="0,12,0,0">
+                            <Button Content="Up" Click="RtUp_Click" Margin="0,0,8,0"/>
+                            <Button Content="Down" Click="RtDown_Click" Margin="0,0,8,0"/>
+                            <Button Content="Remove" Click="RtRemove_Click" Margin="0,0,8,0"/>
+                            <Button Content="Clear Route" Click="RtClear_Click"/>
+                        </StackPanel>
+                        <TextBlock x:Name="uiRtStatus" Margin="0,8,0,0" TextWrapping="Wrap"
+                                   Foreground="{ThemeResource SystemFillColorCriticalBrush}"/>
+                    </StackPanel>
+                </Grid>
+            </PivotItem>
+
+            <!-- ======================================== LINES ======================================== -->
+            <PivotItem Header="Lines">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="360"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Grid Grid.Row="0" Grid.Column="0" Margin="0,4,12,4">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="40"/>
+                            <ColumnDefinition Width="50"/>
+                            <ColumnDefinition Width="90"/>
+                            <ColumnDefinition Width="70"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Style="{StaticResource ApColHdr}" Text="#"/>
+                        <TextBlock Grid.Column="1" Style="{StaticResource ApColHdr}" Text="Type"/>
+                        <TextBlock Grid.Column="2" Style="{StaticResource ApColHdr}" Text="Text"/>
+                        <TextBlock Grid.Column="3" Style="{StaticResource ApColHdr}" Text="Vertices"/>
+                        <TextBlock Grid.Column="4" Style="{StaticResource ApColHdr}" Text="Note"/>
+                    </Grid>
+                    <ListView Grid.Row="1" Grid.Column="0" x:Name="uiListLines" Margin="0,0,12,0"
+                              SelectionMode="Single" SelectionChanged="ListLines_SelectionChanged">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="40"/>
+                                        <ColumnDefinition Width="50"/>
+                                        <ColumnDefinition Width="90"/>
+                                        <ColumnDefinition Width="70"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0" Style="{StaticResource ApCell}" Text="{Binding Seq}"/>
+                                    <TextBlock Grid.Column="1" Style="{StaticResource ApCell}" Text="{Binding Kind}"/>
+                                    <TextBlock Grid.Column="2" Style="{StaticResource ApCell}" Text="{Binding Text}"/>
+                                    <TextBlock Grid.Column="3" Style="{StaticResource ApCell}" Text="{Binding Count}"/>
+                                    <TextBlock Grid.Column="4" Style="{StaticResource ApCell}" Text="{Binding Note}"/>
+                                </Grid>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                    <StackPanel Grid.Row="0" Grid.RowSpan="2" Grid.Column="1" x:Name="uiPanelLine">
+                        <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
+                            <TextBlock VerticalAlignment="Center" Margin="0,0,8,0" Width="60"
+                                       Style="{StaticResource EditorParamStaticTextBlockStyle}">Type</TextBlock>
+                            <TextBox x:Name="uiLnType" Width="60" MaxLength="2" Text="1"
+                                     ToolTipService.ToolTip="DCS line type number (type_num). DCS-saved lines use 1 (boundary / phase line) and 3."/>
+                            <TextBlock VerticalAlignment="Center" Margin="16,0,8,0"
+                                       Style="{StaticResource EditorParamStaticTextBlockStyle}">Text</TextBlock>
+                            <TextBox x:Name="uiLnText" Width="120" MaxLength="16" CharacterCasing="Upper"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+                            <TextBlock VerticalAlignment="Center" Margin="0,0,8,0" Width="60"
+                                       Style="{StaticResource EditorParamStaticTextBlockStyle}">Note</TextBlock>
+                            <TextBox x:Name="uiLnNote" Width="280"/>
+                        </StackPanel>
+                        <TextBlock Margin="0,10,0,4" Style="{StaticResource EditorParamStaticTextBlockStyle}">
+                            Vertices (2-4, one per line: MGRS or lat, lon)
+                        </TextBlock>
+                        <TextBox x:Name="uiLnVerts" AcceptsReturn="True" Height="120" FontFamily="Consolas"
+                                 TextWrapping="NoWrap" CharacterCasing="Upper"
+                                 PlaceholderText="32U LV 9850 7696&#x0a;32U LV 9852 8172"/>
+                        <StackPanel Orientation="Horizontal" Margin="0,12,0,0" HorizontalAlignment="Right">
+                            <Button Content="New" Click="LnNew_Click" Margin="0,0,8,0"/>
+                            <Button Content="Delete" Click="LnDelete_Click" Margin="0,0,8,0"/>
+                            <Button Content="Save Line" Click="LnSave_Click" Style="{StaticResource AccentButtonStyle}"/>
+                        </StackPanel>
+                        <TextBlock x:Name="uiLnStatus" Margin="0,8,0,0" TextWrapping="Wrap"
+                                   Foreground="{ThemeResource SystemFillColorCriticalBrush}"/>
+                    </StackPanel>
+                </Grid>
+            </PivotItem>
+
+            <!-- ======================================== AREAS / ZONES ======================================== -->
+            <PivotItem Header="Areas &amp; Zones">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="360"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Grid Grid.Row="0" Grid.Column="0" Margin="0,4,12,4">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="40"/>
+                            <ColumnDefinition Width="60"/>
+                            <ColumnDefinition Width="70"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Style="{StaticResource ApColHdr}" Text="#"/>
+                        <TextBlock Grid.Column="1" Style="{StaticResource ApColHdr}" Text="Kind"/>
+                        <TextBlock Grid.Column="2" Style="{StaticResource ApColHdr}" Text="Vertices"/>
+                        <TextBlock Grid.Column="3" Style="{StaticResource ApColHdr}" Text="Note"/>
+                    </Grid>
+                    <ListView Grid.Row="1" Grid.Column="0" x:Name="uiListShapes" Margin="0,0,12,0"
+                              SelectionMode="Single" SelectionChanged="ListShapes_SelectionChanged">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="40"/>
+                                        <ColumnDefinition Width="60"/>
+                                        <ColumnDefinition Width="70"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0" Style="{StaticResource ApCell}" Text="{Binding Seq}"/>
+                                    <TextBlock Grid.Column="1" Style="{StaticResource ApCell}" Text="{Binding Kind}"/>
+                                    <TextBlock Grid.Column="2" Style="{StaticResource ApCell}" Text="{Binding Count}"/>
+                                    <TextBlock Grid.Column="3" Style="{StaticResource ApCell}" Text="{Binding Note}"/>
+                                </Grid>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                    <StackPanel Grid.Row="0" Grid.RowSpan="2" Grid.Column="1" x:Name="uiPanelShape">
+                        <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
+                            <TextBlock VerticalAlignment="Center" Margin="0,0,8,0" Width="60"
+                                       Style="{StaticResource EditorParamStaticTextBlockStyle}">Kind</TextBlock>
+                            <ComboBox x:Name="uiShKind" Width="220">
+                                <ComboBoxItem Content="Area"/>
+                                <ComboBoxItem Content="NFZ - No Fire Zone"/>
+                                <ComboBoxItem Content="PFZ - Priority Fire Zone"/>
+                            </ComboBox>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+                            <TextBlock VerticalAlignment="Center" Margin="0,0,8,0" Width="60"
+                                       Style="{StaticResource EditorParamStaticTextBlockStyle}">Note</TextBlock>
+                            <TextBox x:Name="uiShNote" Width="280"/>
+                        </StackPanel>
+                        <TextBlock Margin="0,10,0,4" Style="{StaticResource EditorParamStaticTextBlockStyle}">
+                            Vertices (3 or more, one per line: MGRS or lat, lon)
+                        </TextBlock>
+                        <TextBox x:Name="uiShVerts" AcceptsReturn="True" Height="160" FontFamily="Consolas"
+                                 TextWrapping="NoWrap" CharacterCasing="Upper"/>
+                        <StackPanel Orientation="Horizontal" Margin="0,12,0,0" HorizontalAlignment="Right">
+                            <Button Content="New" Click="ShNew_Click" Margin="0,0,8,0"/>
+                            <Button Content="Delete" Click="ShDelete_Click" Margin="0,0,8,0"/>
+                            <Button Content="Save Shape" Click="ShSave_Click" Style="{StaticResource AccentButtonStyle}"/>
+                        </StackPanel>
+                        <TextBlock x:Name="uiShStatus" Margin="0,8,0,0" TextWrapping="Wrap"
+                                   Foreground="{ThemeResource SystemFillColorCriticalBrush}"/>
+                    </StackPanel>
+                </Grid>
+            </PivotItem>
+
+            <!-- ======================================== ADF ======================================== -->
+            <PivotItem Header="ADF">
+                <ScrollViewer>
+                    <StackPanel x:Name="uiPanelAdf" Margin="0,4,0,0" HorizontalAlignment="Left">
+                        <CheckBox x:Name="uiAdfEnabled" Content="Load ADF presets" Click="AdfEnabled_Click"/>
+                        <Grid x:Name="uiAdfGrid" Margin="0,8,0,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="60"/>
+                                <ColumnDefinition Width="90"/>
+                                <ColumnDefinition Width="120"/>
+                            </Grid.ColumnDefinitions>
+                        </Grid>
+                        <StackPanel Orientation="Horizontal" Margin="0,12,0,0">
+                            <Button Content="Save ADF Presets" Click="AdfSave_Click" Style="{StaticResource AccentButtonStyle}"/>
+                        </StackPanel>
+                        <TextBlock x:Name="uiAdfStatus" Margin="0,8,0,0" TextWrapping="Wrap"
+                                   Foreground="{ThemeResource SystemFillColorCriticalBrush}"/>
+                    </StackPanel>
+                </ScrollViewer>
+            </PivotItem>
+        </Pivot>
+
+        <!--
+        ===============================================================================================================
+        row 2 : validation summary
+        ===============================================================================================================
+        -->
+        <InfoBar Grid.Row="2" x:Name="uiInfoIssues" Margin="16,4,16,0" IsClosable="False"
+                 Severity="Warning" Title="This mission will not merge into a DTC until these are fixed"/>
+
+        <!--
+        ===============================================================================================================
+        row 3 : common editor controls
+        ===============================================================================================================
+        -->
+        <controls:LinkResetBtnsControl Grid.Row="3" x:Name="uiCtlLinkResetBtns"/>
+    </Grid>
+</ui_base:SystemEditorPageBase>

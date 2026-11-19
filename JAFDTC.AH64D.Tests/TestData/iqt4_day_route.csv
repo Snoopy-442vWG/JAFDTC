@@ -1,0 +1,13 @@
+Route,#,Waypoint,TSD CP,IDENT,FREE Text,MGRS,Alt,Latitude,Longitude,Elev_ft,What happens there
+VENUS,0,RAMSTEIN AB (ETAR),W01,WP,RMS,32U LV 9850 7696,0,49.4369,7.6001,804,"Start (CHAOS, 151 vARB spots, Blue Tiger ramp). ATIS 374.375, GND 300.650, TWR 356.850. Hover-taxi; depart north under tower control. Transition leg 2.6 nm over Ramstein-Miesenbach - not terrain flight."
+VENUS,1,SP 1,W02,SP,SP1,32U LV 9852 8172,0,49.4797,7.5991,861,"Start point (north gate): push time, start route timing; turn 53 deg right onto 052. Transition to LOW LEVEL (80-200 ft AHO). HELO common 75.500 FM1 (P8, datalink)."
+VENUS,2,ACP 1,W03,WP,A01,32U MV 0646 8773,0,49.534966,7.707307,922,Open ground (281 m). Contour flight (25-80 ft AHO) over farmland; position report on HELO common (FM1 P8); turn 54 deg left onto 358.
+VENUS,3,ACP 2,W04,WP,A02,32U MV 0636 9570,0,49.606677,7.703965,1069,Open high ground (326 m). Low level / contour as terrain dictates; practise mode transitions; turn 54 deg left onto 305.
+VENUS,4,ACP 3,W05,WP,A03,32U LA 9800 0170,0,49.659241,7.586827,842,Above the Glan/Lauter valleys (257 m). Masking and unmasking; cross the valley road at an angle; turn 53 deg left onto 252. Call SPADES 342.300 before the Baumholder area.
+VENUS,5,RP 1,W06,RP,RP1,32U LV 9157 9974,0,49.640517,7.498206,1400,"Release point (427 m), 4.1 nm NE of LZ ROBIN. Turn 25 deg left onto 227; NO further turns. NOE inbound (<=25 ft above vegetation)."
+VENUS,6,LZ ROBIN,W07,LZ,ROB,32U LV 8592 9475,0,49.5946,7.4215,1363,"LZ ROBIN: terrain-flight approach to an unimproved ridge-top LZ (415 m, ~1 deg slope, no structures within 800 m). Land, crew checks, terrain-flight takeoff to the SSE. Range 32B impact area is 6+ km N - stay S of it."
+VENUS,7,SP 2,W08,SP,SP2,32U LV 8705 9075,0,49.558829,7.438286,857,Start point for the return (261 m); turn 10 deg left onto 153. Call SPADES leaving the Baumholder area. Exfil differs from infil.
+VENUS,8,ACP 4,W09,WP,A04,32U LV 8874 8730,0,49.528157,7.462582,959,Open ground (292 m) E of Kusel. Contour flight; turn 23 deg left onto 129.
+VENUS,9,ACP 5,W10,WP,A05,32U LV 9168 8479,0,49.506108,7.503848,1204,Open high ground (367 m); turn 0 deg right onto 130 toward the NW gate.
+VENUS,10,RP 2,W11,RP,RP2,32U LV 9513 8180,0,49.4798,7.5523,1056,Recovery release point (NW gate) 3.2 nm from Ramstein. Call TWR 356.850; climb to pattern altitude; turn 14 deg right onto 144.
+VENUS,11,RAMSTEIN AB (ETAR),W01,WP,RMS,32U LV 9850 7696,0,49.4369,7.6001,804,Approach and landing at Ramstein (151 vARB spots). Shutdown; Tacview debrief.

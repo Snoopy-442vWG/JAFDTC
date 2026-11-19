@@ -35,6 +35,7 @@ function JAFDTC_GetPlayerAircraftType()
         -- TODO: do a table lookup here?
         local model = string.upper(data["Name"])
         if model == "A-10C_2" then return "A10C" end
+        if model == "AH-64D_BLK_II" then return "AH64D" end
         if model == "F-15ESE" then return "F15E" end
         if model == "F-16C_50" then return "F16CM" end
         if model == "FA-18C_HORNET" then return "FA18C" end

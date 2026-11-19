@@ -341,7 +341,8 @@ namespace JAFDTC.UI.Base
             {
                 try
                 {
-                    Config.SaveMergedSimDTC();
+                    if (!Config.SaveMergedSimDTC())
+                        throw new Exception(Config.LastSimDTCError ?? "See jafdtc-log.txt for details.");
                     await Utilities.Message1BDialog(Content.XamlRoot, "Tape Merged",
                                                     $"Successfully generated and saved the merged tape to the file\n\n" +
                                                     $"{EditDTC.OutputPath}");
@@ -349,7 +350,8 @@ namespace JAFDTC.UI.Base
                 catch (Exception ex)
                 {
                     FileManager.Log($"EditSimulatorDTCPage:BtnSetOutput_Click exception {ex}");
-                    await Utilities.Message1BDialog(Content.XamlRoot, "Tape Merge Failed", $"Windows says you can thank {ex}");
+                    await Utilities.Message1BDialog(Content.XamlRoot, "Tape Merge Failed",
+                                                    $"The DTC tape was not written.\n\n{ex.Message}");
                 }
             }
         }

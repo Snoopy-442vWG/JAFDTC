@@ -56,6 +56,7 @@
     <None Remove="Data\db-threats.json" />
     <None Remove="Data\kb-default-templates.zip" />
     <None Remove="Data\params-map-tiles.json" />
+    <None Remove="DCS\DTC\AH-64D_BLK_II.dtc" />
     <None Remove="DCS\DTC\F-16C_50.dtc" />
     <None Remove="DCS\DTC\FA-18C_hornet.dtc" />
     <None Remove="DCS\Hooks\JAFDTCStatusMsgHook.lua" />
@@ -122,6 +123,7 @@
     <Content Include="Data\db-threats.json" />
     <Content Include="Data\kb-default-templates.zip" />
     <Content Include="Data\params-map-tiles.json" />
+    <Content Include="DCS\DTC\AH-64D_BLK_II.dtc" />
     <Content Include="DCS\DTC\F-16C_50.dtc" />
     <Content Include="DCS\DTC\FA-18C_hornet.dtc" />
     <Content Include="DCS\Hooks\JAFDTCStatusMsgHook.lua" />
@@ -449,6 +451,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\JAFDTC.AH64D\JAFDTC.AH64D.csproj" />
     <ProjectReference Include="..\JAFDTC.Core\JAFDTC.Core.csproj" />
     <ProjectReference Include="..\JAFDTC.File.CF\JAFDTC.File.CF.csproj" />
     <ProjectReference Include="..\JAFDTC.File.MIZ\JAFDTC.File.MIZ.csproj" />
@@ -460,5 +463,10 @@
 
   <ItemGroup>
     <Folder Include="Kneeboards\" />
+  </ItemGroup>
+  <!-- unpackaged (portable) builds: dotnet publish -p:WindowsPackageType=None. keeps msix tooling on so the
+       compiled xaml (.xbf) and resources.pri are produced, but drops the store manifest. -->
+  <ItemGroup Condition="'$(WindowsPackageType)' == 'None'">
+    <AppxManifest Remove="Package.appxmanifest" />
   </ItemGroup>
 </Project>
