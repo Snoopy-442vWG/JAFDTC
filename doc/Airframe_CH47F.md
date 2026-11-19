@@ -40,7 +40,7 @@ position**, so the route is independent of waypoint names; the page previews the
 
 ## Differences from DCS-DTC (deliberate)
 
-| Situation | DCS-DTC | ESP-JAFDTC |
+| Situation | DCS-DTC | JAFDTC |
 |---|---|---|
 | ARC-186 knob that has to "wrap" (e.g. MHz digit 9 → 0) | Assumes every knob spans 3-15 and takes the "shorter" way round, which lands on the wrong digit | Turns the direct difference, correct whether or not the knobs wrap |
 | CDU frequency not readable | Lua error, upload stops | Logs it and skips the VHF frequency, rest of the load continues |

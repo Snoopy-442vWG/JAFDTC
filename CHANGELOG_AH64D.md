@@ -1,4 +1,4 @@
-# JAFDTC 1.5.1 + AH-64D (442 vWG fork) - Change Log
+# JAFDTC 1.5.3 + AH-64D (442 vWG fork) - Change Log (AH-64D detail; see CHANGELOG_1.5.2_to_1.5.3.md for the release summary)
 
 Build date 16-Nov-26. Adds the AH-64D Apache (BLK.II) as a JAFDTC airframe that writes DCS native DTC (.dtc) tapes.
 

@@ -91,19 +91,25 @@ These are the same layouts as the 442CWG AH-64D DTC worksheets (`IQT-4_DAY_contr
   other section is unchanged.
 * `JAFDTC.AH64D.Tests` has 29 tests. Run `dotnet test` in that folder.
 
-## Flying it (checked in DCS 17-Nov-2026)
+## Flying it (checked in DCS 17-Nov-2026; points workaround checked 18-Nov-2026)
 
 * JAFDTC recognizes the Apache cockpit ("Pilot in Pit"). This needs the updated `CommonFunctions.lua` in
   `Saved Games\DCS\Scripts\JAFDTC`.
 * **Load to Jet** writes the tape (by default to `Saved Games\DCS\DTC\<configuration name>.dtc`). Then load it in DCS
-  from the DTC interface and run MASTER LOAD on the DTU page.
+  through the Comms menu (`\`) > F8 Ground Crew > DTC and run MASTER LOAD on the DTU page.
+* **Waypoints, control measures or targets not loading (DCS quirk).** When a tape is loaded in-game through
+  `\` > Ground Crew > DTC, DCS sends lines, areas and radios to the jet but not the **WPTHZ**, **CTRLM** and
+  **TGT/THRT** tabs unless each tab's **Do not upload tab data** box has been touched. Workaround: in the DTC window,
+  on each of those three tabs tick **Do not upload tab data** and untick it again (leave Format alone), then load.
+  Tapes saved by DCS itself behave the same way, and saving after the toggle writes nothing different to the file,
+  so this cannot be fixed from the tape.
 * **Control measures that seem missing are usually just hidden.** In NAV phase the TSD hides FRIENDLY UNITS by
   default (TSD > SHOW > COORD SHOW), so C points with friendly-unit IDENTs such as FU and HO don't draw. Check
   TSD > POINT > CTRLM, turn FRIENDLY UNITS on (or use ATK phase), or use CP / AP IDENTs for route-related points.
 
 ## Limits
 
-* No cockpit upload: "Load to Jet" stays off for AH-64D configurations. Load the tape through DCS.
+* No cockpit key presses for the Apache: "Load to Jet" writes the tape, which you then load through DCS (see above).
 * **IDM / datalink** members and networks are not edited. No DCS-saved tape seen so far has IDM data to copy the
   format from, so JAFDTC keeps the base tape's IDM section. The **DL** box on a comm preset is supported.
 * Routes can use W and C points. T points cannot be added to routes.
