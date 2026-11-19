@@ -31,6 +31,7 @@ local terrain = require('terrain')
 
 dofile(lfs.writedir() .. 'Scripts/JAFDTC/CommonFunctions.lua')
 dofile(lfs.writedir() .. 'Scripts/JAFDTC/A10CFunctions.lua')
+dofile(lfs.writedir() .. 'Scripts/JAFDTC/C130JFunctions.lua')
 dofile(lfs.writedir() .. 'Scripts/JAFDTC/F15EFunctions.lua')
 dofile(lfs.writedir() .. 'Scripts/JAFDTC/F16CFunctions.lua')
 dofile(lfs.writedir() .. 'Scripts/JAFDTC/FA18CFunctions.lua')

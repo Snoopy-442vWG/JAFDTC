@@ -36,6 +36,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Linq;
 using Windows.System;
 
 using static JAFDTC.Utilities.Networking.WyptCaptureDataRx;
@@ -224,10 +225,14 @@ namespace JAFDTC.UI.Base
         /// If the PageHelper specifies a non-zero maximum name length,
         /// indicate when it is exceeded with the warning style.
         /// </summary>
+        private int NameLengthForLimit(string name)
+            => (PageHelper.SystemInfo.NavptNameCountsAlphaNumOnly) ? (name ?? "").Count(char.IsLetterOrDigit)
+                                                                   : (name ?? "").Length;
+
         private void ValidateNavptNameLength()
         {
             if ((PageHelper.SystemInfo.NavptMaxNameLength > 0) &&
-                (uiNavptValueName.Text.Length > PageHelper.SystemInfo.NavptMaxNameLength))
+                (NameLengthForLimit(uiNavptValueName.Text) > PageHelper.SystemInfo.NavptMaxNameLength))
             {
                 uiNavptValueName.Style = (Style)Application.Current.Resources["WarningTextBoxStyle"];
             }

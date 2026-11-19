@@ -80,8 +80,9 @@ https://www.gnu.org/licenses/.
                     <TextBlock Text="F-15E Strike Eagle" Tag="4"/>
                     <TextBlock Text="F-16C Viper" Tag="5"/>
                     <TextBlock Text="F/A-18C Hornet" Tag="6"/>
-                    <!-- AH-64D is last so saved airframe selections (combo index) from earlier versions still map -->
+                    <!-- AH-64D, C-130J are last so saved airframe selections (combo index) from earlier versions still map -->
                     <TextBlock Text="AH-64D Apache" Tag="2"/>
+                    <TextBlock Text="C-130J Hercules" Tag="9"/>
                     <!--
                     <TextBlock Text="Mirage 2000C" Tag="7"/>
                     -->

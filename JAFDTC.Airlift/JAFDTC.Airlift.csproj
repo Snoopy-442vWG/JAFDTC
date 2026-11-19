@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    JAFDTC.Airlift : airframe logic for the DCS C-130J (and, later, CH-47F) cockpit uploads.
+
+    Plans the CNI-MU key sequences for waypoints, route (LEGS) and radio presets as plain step lists, with no WinUI
+    dependency, so the sequences can be unit tested against the reference sequences in DCS-DTC (the-paid-actor/dcs-dtc,
+    GPL-3) that they were ported from. The JAFDTC app turns the steps into its own cockpit command stream.
+  -->
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>disable</Nullable>
+    <RootNamespace>JAFDTC.Airlift</RootNamespace>
+    <Platforms>AnyCPU;x64;x86;ARM64</Platforms>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\JAFDTC.AH64D\JAFDTC.AH64D.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -63,6 +63,7 @@
     <None Remove="DCS\Hooks\JAFDTCWyptCaptureHook.lua" />
     <None Remove="DCS\JAFDTC.lua" />
     <None Remove="DCS\JAFDTC\A10CFunctions.lua" />
+    <None Remove="DCS\JAFDTC\C130JFunctions.lua" />
     <None Remove="DCS\JAFDTC\commonFunctions.lua" />
     <None Remove="DCS\JAFDTC\f15EFunctions.lua" />
     <None Remove="DCS\JAFDTC\f16CFunctions.lua" />
@@ -129,6 +130,7 @@
     <Content Include="DCS\Hooks\JAFDTCStatusMsgHook.lua" />
     <Content Include="DCS\Hooks\JAFDTCWyptCaptureHook.lua" />
     <Content Include="DCS\JAFDTC\A10CFunctions.lua" />
+    <Content Include="DCS\JAFDTC\C130JFunctions.lua" />
     <Content Include="DCS\JAFDTC\StatusMsg.dlg" />
     <Content Include="DCS\JAFDTC\JAFDTC.lua" />
     <Content Include="DCS\JAFDTC\CommonFunctions.lua" />
@@ -452,6 +454,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\JAFDTC.AH64D\JAFDTC.AH64D.csproj" />
+    <ProjectReference Include="..\JAFDTC.Airlift\JAFDTC.Airlift.csproj" />
     <ProjectReference Include="..\JAFDTC.Core\JAFDTC.Core.csproj" />
     <ProjectReference Include="..\JAFDTC.File.CF\JAFDTC.File.CF.csproj" />
     <ProjectReference Include="..\JAFDTC.File.MIZ\JAFDTC.File.MIZ.csproj" />

@@ -285,6 +285,7 @@ namespace JAFDTC.Utilities
             {
                 AirframeTypes.A10C => Path.Combine(_settingsDirPath, dataType, "A10C"),
                 AirframeTypes.AH64D => Path.Combine(_settingsDirPath, dataType, "AH64D"),
+                AirframeTypes.C130J => Path.Combine(_settingsDirPath, dataType, "C130J"),
                 AirframeTypes.F15E => Path.Combine(_settingsDirPath, dataType, "F15E"),
                 AirframeTypes.F16C => Path.Combine(_settingsDirPath, dataType, "F16C"),
                 AirframeTypes.FA18C => Path.Combine(_settingsDirPath, dataType, "FA18C"),
