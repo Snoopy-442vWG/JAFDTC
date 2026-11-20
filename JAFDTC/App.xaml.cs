@@ -354,6 +354,8 @@ namespace JAFDTC
                 {
                     ["A10C"] = AirframeTypes.A10C,
                     ["AH64D"] = AirframeTypes.AH64D,
+                    ["C130J"] = AirframeTypes.C130J,
+                    ["CH47F"] = AirframeTypes.CH47F,
                     ["F15E"] = AirframeTypes.F15E,
                     ["F16CM"] = AirframeTypes.F16C,
                     ["FA18C"] = AirframeTypes.FA18C,

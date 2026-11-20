@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+**********************************************************************************************************************
+
+C130JEditRoutePage.xaml : ui xaml for the c-130j route (LEGS) page
+
+Copyright(C) 2026 442 vWG
+
+This program is free software: you can redistribute it and/or modify it under the terms of the GNU General
+Public License as published by the Free Software Foundation, either version 3 of the License, or (at your
+option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
+implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
+
+You should have received a copy of the GNU General Public License along with this program.  If not, see
+https://www.gnu.org/licenses/.
+
+**********************************************************************************************************************
+-->
+<base:SystemEditorPageBase
+    x:Class="JAFDTC.UI.C130J.C130JEditRoutePage"
+    xmlns:base="using:JAFDTC.UI.Base"
+    xmlns:controls="using:JAFDTC.UI.Controls"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Page.Resources>
+        <SolidColorBrush x:Key="ErrorFieldBorderBrush" Color="DarkRed"/>
+        <SolidColorBrush x:Key="ErrorFieldBackgroundBrush" Color="PaleVioletRed"/>
+    </Page.Resources>
+
+    <Grid Background="{ThemeResource SystemControlBackgroundChromeMediumLowBrush }">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0" Margin="16,8,12,8" VerticalAlignment="Top" HorizontalAlignment="Center">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="260"/>
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"
+                       Style="{StaticResource EditorTitleTextBlockStyle}">
+                Route (CNI LEGS Page):
+            </TextBlock>
+
+            <!-- route mode -->
+            <TextBlock Grid.Row="1" Grid.Column="0" Margin="12,12,0,0" VerticalAlignment="Center"
+                       Style="{StaticResource EditorParamStaticTextBlockStyle}"
+                       HorizontalTextAlignment="Right">
+                Build Route From
+            </TextBlock>
+            <ComboBox Grid.Row="1" Grid.Column="1" Margin="12,12,0,0"
+                      x:Name="uiComboMode"
+                      VerticalAlignment="Center" HorizontalAlignment="Stretch"
+                      SelectionChanged="ComboBox_SelectionChanged" Tag="Mode"
+                      ToolTipService.ToolTip="Which waypoints the upload strings into the route on the LEGS page">
+                <ComboBox.Items>
+                    <!-- must match JAFDTC.Airlift.Cni.CniRouteMode order -->
+                    <TextBlock Text="No route (waypoints only)"/>
+                    <TextBlock Text="All waypoints"/>
+                    <TextBlock Text="Range of waypoints"/>
+                    <TextBlock Text="Specific waypoints"/>
+                </ComboBox.Items>
+            </ComboBox>
+
+            <!-- range -->
+            <TextBlock Grid.Row="2" Grid.Column="0" Margin="12,12,0,0" VerticalAlignment="Center"
+                       Style="{StaticResource EditorParamStaticTextBlockStyle}"
+                       HorizontalTextAlignment="Right">
+                From Waypoint
+            </TextBlock>
+            <TextBox Grid.Row="2" Grid.Column="1" Margin="12,12,0,0" x:Name="uiTextRangeFrom"
+                     HorizontalAlignment="Stretch" VerticalAlignment="Center"
+                     Style="{StaticResource EditorParamEditTextBoxStyle}"
+                     MaxLength="3" PlaceholderText="1"
+                     LostFocus="TextBox_LostFocus" GotFocus="TextBox_GotFocus" Tag="RangeFrom"
+                     ToolTipService.ToolTip="First waypoint number in the route"/>
+
+            <TextBlock Grid.Row="3" Grid.Column="0" Margin="12,12,0,0" VerticalAlignment="Center"
+                       Style="{StaticResource EditorParamStaticTextBlockStyle}"
+                       HorizontalTextAlignment="Right">
+                To Waypoint
+            </TextBlock>
+            <TextBox Grid.Row="3" Grid.Column="1" Margin="12,12,0,0" x:Name="uiTextRangeTo"
+                     HorizontalAlignment="Stretch" VerticalAlignment="Center"
+                     Style="{StaticResource EditorParamEditTextBoxStyle}"
+                     MaxLength="3" PlaceholderText="10"
+                     LostFocus="TextBox_LostFocus" GotFocus="TextBox_GotFocus" Tag="RangeTo"
+                     ToolTipService.ToolTip="Last waypoint number in the route"/>
+
+            <!-- specific list -->
+            <TextBlock Grid.Row="4" Grid.Column="0" Margin="12,12,0,0" VerticalAlignment="Center"
+                       Style="{StaticResource EditorParamStaticTextBlockStyle}"
+                       HorizontalTextAlignment="Right">
+                Waypoints
+            </TextBlock>
+            <TextBox Grid.Row="4" Grid.Column="1" Margin="12,12,0,0" x:Name="uiTextList"
+                     HorizontalAlignment="Stretch" VerticalAlignment="Center"
+                     Style="{StaticResource EditorParamEditTextBoxStyle}"
+                     MaxLength="200" PlaceholderText="1,3,5-8"
+                     LostFocus="TextBox_LostFocus" GotFocus="TextBox_GotFocus" Tag="WaypointList"
+                     ToolTipService.ToolTip="Waypoint numbers in route order; ranges like 5-8 are allowed"/>
+
+            <TextBlock Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" Margin="12,24,0,0"
+                       x:Name="uiTextSummary" TextWrapping="Wrap" MaxWidth="460"
+                       Style="{StaticResource EditorParamStaticTextBlockStyle}"/>
+        </Grid>
+
+        <controls:LinkResetBtnsControl x:Name="uiCtlLinkResetBtns" Grid.Row="1"/>
+    </Grid>
+</base:SystemEditorPageBase>

@@ -28,6 +28,8 @@ namespace JAFDTC.Models.Core
         F15E = 4,
         F16C = 5,
         FA18C = 6,
+        C130J = 9,                      // 442 vWG: C-130J Hercules (CNI-MU key upload)
+        CH47F = 10,                     // 442 vWG: CH-47F Chinook (CDU key upload)
         // M2000C = 7,                  // NOTE: no longer supported
         // F14AB = 8                    // NOTE: no longer supported
     }

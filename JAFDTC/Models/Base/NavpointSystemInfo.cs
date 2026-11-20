@@ -66,6 +66,10 @@ namespace JAFDTC.Models.Base
         /// </summary>
         public int NavptMaxNameLength { get; }
 
+        // when true, only letters and digits count toward NavptMaxNameLength (the airframe drops spaces and
+        // punctuation when it loads the name, e.g. the c-130j cni identifier).
+        public bool NavptNameCountsAlphaNumOnly { get; init; }
+
         /// <summary>
         /// return maximum number of navpoints that can be present in a route.
         /// </summary>

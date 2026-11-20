@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+**********************************************************************************************************************
+
+AH64DEditCommPage.xaml : ui xaml for the AH-64D dtc comm preset editor
+
+Copyright(C) 2026 442 vWG
+
+This program is free software: you can redistribute it and/or modify it under the terms of the GNU General
+Public License as published by the Free Software Foundation, either version 3 of the License, or (at your
+option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
+implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
+You should have received a copy of the GNU General Public License along with this program.  If not, see
+https://www.gnu.org/licenses/.
+
+**********************************************************************************************************************
+-->
+<ui_base:SystemEditorPageBase
+    x:Class="JAFDTC.UI.AH64D.AH64DEditCommPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:ui_base="using:JAFDTC.UI.Base"
+    xmlns:controls="using:JAFDTC.UI.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource SystemControlBackgroundChromeMediumLowBrush}">
+
+    <Page.Resources>
+        <Style x:Key="ApColHdr" TargetType="TextBlock" BasedOn="{StaticResource TableHeaderTextStyle}">
+            <Setter Property="Margin" Value="4,0,0,0"/>
+        </Style>
+        <Style x:Key="ApCell" TargetType="TextBlock">
+            <Setter Property="Margin" Value="4,0,0,0"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+        </Style>
+        <Style x:Key="ApLabel" TargetType="TextBlock" BasedOn="{StaticResource EditorParamStaticTextBlockStyle}">
+            <Setter Property="Margin" Value="0,10,8,0"/>
+            <Setter Property="HorizontalTextAlignment" Value="Right"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+    </Page.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="340"/>
+        </Grid.ColumnDefinitions>
+
+        <CommandBar Grid.Row="0" Grid.ColumnSpan="2" Margin="0,8,12,0" HorizontalAlignment="Right"
+                    DefaultLabelPosition="Right">
+            <AppBarButton x:Name="uiBarImportDtc" Icon="Download" Label="Import .dtc"
+                          Click="CmdImportDtc_Click"
+                          ToolTipService.ToolTip="Take all 10 comm presets from a DCS AH-64D .dtc file"/>
+            <AppBarButton x:Name="uiBarImportCsv" Label="Import CSV"
+                          Click="CmdImportCsv_Click"
+                          ToolTipService.ToolTip="Preset, UnitID, CallSign, Primary, DLNet, VHF, UHF, FM1, FM2 [, HF]">
+                <AppBarButton.Icon>
+                    <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE9F9;"/>
+                </AppBarButton.Icon>
+            </AppBarButton>
+            <AppBarButton x:Name="uiBarExportCsv" Icon="Save" Label="Export CSV" Click="CmdExportCsv_Click"/>
+        </CommandBar>
+
+        <Grid Grid.Row="1" Grid.Column="0" Margin="16,8,12,4">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="30"/>
+                <ColumnDefinition Width="80"/>
+                <ColumnDefinition Width="60"/>
+                <ColumnDefinition Width="50"/>
+                <ColumnDefinition Width="36"/>
+                <ColumnDefinition Width="70"/>
+                <ColumnDefinition Width="70"/>
+                <ColumnDefinition Width="64"/>
+                <ColumnDefinition Width="64"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0" Style="{StaticResource ApColHdr}" Text="#"/>
+            <TextBlock Grid.Column="1" Style="{StaticResource ApColHdr}" Text="Unit ID"/>
+            <TextBlock Grid.Column="2" Style="{StaticResource ApColHdr}" Text="C/S"/>
+            <TextBlock Grid.Column="3" Style="{StaticResource ApColHdr}" Text="Pri"/>
+            <TextBlock Grid.Column="4" Style="{StaticResource ApColHdr}" Text="DL"/>
+            <TextBlock Grid.Column="5" Style="{StaticResource ApColHdr}" Text="VHF"/>
+            <TextBlock Grid.Column="6" Style="{StaticResource ApColHdr}" Text="UHF"/>
+            <TextBlock Grid.Column="7" Style="{StaticResource ApColHdr}" Text="FM1"/>
+            <TextBlock Grid.Column="8" Style="{StaticResource ApColHdr}" Text="FM2"/>
+            <TextBlock Grid.Column="9" Style="{StaticResource ApColHdr}" Text="Source"/>
+        </Grid>
+        <ListView Grid.Row="2" Grid.Column="0" x:Name="uiListPresets" Margin="16,0,12,0"
+                  SelectionMode="Single" SelectionChanged="ListPresets_SelectionChanged">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="30"/>
+                            <ColumnDefinition Width="80"/>
+                            <ColumnDefinition Width="60"/>
+                            <ColumnDefinition Width="50"/>
+                            <ColumnDefinition Width="36"/>
+                            <ColumnDefinition Width="70"/>
+                            <ColumnDefinition Width="70"/>
+                            <ColumnDefinition Width="64"/>
+                            <ColumnDefinition Width="64"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Style="{StaticResource ApCell}" Text="{Binding Num}" FontWeight="SemiBold"/>
+                        <TextBlock Grid.Column="1" Style="{StaticResource ApCell}" Text="{Binding Unit}"/>
+                        <TextBlock Grid.Column="2" Style="{StaticResource ApCell}" Text="{Binding CallSign}"/>
+                        <TextBlock Grid.Column="3" Style="{StaticResource ApCell}" Text="{Binding Primary}"/>
+                        <TextBlock Grid.Column="4" Style="{StaticResource ApCell}" Text="{Binding DL}"/>
+                        <TextBlock Grid.Column="5" Style="{StaticResource ApCell}" Text="{Binding VHF}"/>
+                        <TextBlock Grid.Column="6" Style="{StaticResource ApCell}" Text="{Binding UHF}"/>
+                        <TextBlock Grid.Column="7" Style="{StaticResource ApCell}" Text="{Binding FM1}"/>
+                        <TextBlock Grid.Column="8" Style="{StaticResource ApCell}" Text="{Binding FM2}"/>
+                        <TextBlock Grid.Column="9" Style="{StaticResource ApCell}" Text="{Binding Source}"/>
+                    </Grid>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+
+        <ScrollViewer Grid.Row="1" Grid.RowSpan="2" Grid.Column="1" Margin="0,0,12,0">
+            <Grid x:Name="uiPanelPreset">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="90"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition/><RowDefinition/><RowDefinition/><RowDefinition/><RowDefinition/>
+                    <RowDefinition/><RowDefinition/><RowDefinition/><RowDefinition/><RowDefinition/>
+                    <RowDefinition/><RowDefinition/>
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0" Grid.ColumnSpan="2" x:Name="uiPresetTitle" Margin="0,8,0,0"
+                           Style="{StaticResource EditorParamStaticTextBlockStyle}" FontWeight="SemiBold"/>
+                <TextBlock Grid.Row="1" Style="{StaticResource ApLabel}">Unit ID</TextBlock>
+                <TextBox Grid.Row="1" Grid.Column="1" x:Name="uiUnit" Margin="0,10,0,0" Width="140"
+                         HorizontalAlignment="Left" MaxLength="16" CharacterCasing="Upper"
+                         ToolTipService.ToolTip="Shown on the COM page (8 characters fit)"/>
+                <TextBlock Grid.Row="2" Style="{StaticResource ApLabel}">Call Sign</TextBlock>
+                <TextBox Grid.Row="2" Grid.Column="1" x:Name="uiCallSign" Margin="0,10,0,0" Width="100"
+                         HorizontalAlignment="Left" MaxLength="16" CharacterCasing="Upper"
+                         ToolTipService.ToolTip="5 characters fit on the COM page"/>
+                <TextBlock Grid.Row="3" Style="{StaticResource ApLabel}">Primary</TextBlock>
+                <ComboBox Grid.Row="3" Grid.Column="1" x:Name="uiPrimary" Margin="0,10,0,0" Width="140">
+                    <ComboBoxItem Content="None"/>
+                    <ComboBoxItem Content="VHF"/>
+                    <ComboBoxItem Content="UHF"/>
+                    <ComboBoxItem Content="FM1"/>
+                    <ComboBoxItem Content="FM2"/>
+                </ComboBox>
+                <CheckBox Grid.Row="4" Grid.Column="1" x:Name="uiDlNet" Content="Datalink net (DL)" Margin="0,10,0,0"/>
+                <TextBlock Grid.Row="5" Style="{StaticResource ApLabel}">VHF</TextBlock>
+                <TextBox Grid.Row="5" Grid.Column="1" x:Name="uiVhf" Margin="0,10,0,0" Width="110"
+                         HorizontalAlignment="Left" ToolTipService.ToolTip="MHz (ARC-186)"/>
+                <TextBlock Grid.Row="6" Style="{StaticResource ApLabel}">UHF</TextBlock>
+                <TextBox Grid.Row="6" Grid.Column="1" x:Name="uiUhf" Margin="0,10,0,0" Width="110"
+                         HorizontalAlignment="Left" ToolTipService.ToolTip="225-399.975 MHz (ARC-164)"/>
+                <TextBlock Grid.Row="7" Style="{StaticResource ApLabel}">FM1</TextBlock>
+                <TextBox Grid.Row="7" Grid.Column="1" x:Name="uiFm1" Margin="0,10,0,0" Width="110"
+                         HorizontalAlignment="Left" ToolTipService.ToolTip="30-87.975 MHz (ARC-201D)"/>
+                <TextBlock Grid.Row="8" Style="{StaticResource ApLabel}">FM2</TextBlock>
+                <TextBox Grid.Row="8" Grid.Column="1" x:Name="uiFm2" Margin="0,10,0,0" Width="110"
+                         HorizontalAlignment="Left" ToolTipService.ToolTip="30-87.975 MHz (ARC-201D)"/>
+                <TextBlock Grid.Row="9" Style="{StaticResource ApLabel}">HF</TextBlock>
+                <TextBox Grid.Row="9" Grid.Column="1" x:Name="uiHf" Margin="0,10,0,0" Width="110"
+                         HorizontalAlignment="Left" ToolTipService.ToolTip="2-29.9999 MHz (ARC-220, Tx = Rx)"/>
+                <StackPanel Grid.Row="10" Grid.ColumnSpan="2" Orientation="Horizontal" Margin="0,16,0,0"
+                            HorizontalAlignment="Right">
+                    <Button Content="Use Base Tape" Click="PresetClear_Click" Margin="0,0,8,0"
+                            ToolTipService.ToolTip="Do not set this preset: the DTC base tape's preset is used"/>
+                    <Button Content="Save Preset" Click="PresetSave_Click" Style="{StaticResource AccentButtonStyle}"/>
+                </StackPanel>
+                <TextBlock Grid.Row="11" Grid.ColumnSpan="2" x:Name="uiStatus" Margin="0,8,0,0" TextWrapping="Wrap"
+                           Foreground="{ThemeResource SystemFillColorCriticalBrush}"/>
+            </Grid>
+        </ScrollViewer>
+
+        <InfoBar Grid.Row="3" Grid.ColumnSpan="2" x:Name="uiInfoWarn" Margin="16,4,16,0" IsClosable="False"
+                 Severity="Informational" Title="Check before flying"/>
+
+        <controls:LinkResetBtnsControl Grid.Row="4" Grid.ColumnSpan="2" x:Name="uiCtlLinkResetBtns"/>
+    </Grid>
+</ui_base:SystemEditorPageBase>

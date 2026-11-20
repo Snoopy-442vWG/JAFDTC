@@ -30,6 +30,8 @@ namespace JAFDTC
             [AirframeTypes.UNKNOWN] = "",
             [AirframeTypes.A10C] = "A-10C Warthog",
             [AirframeTypes.AH64D] = "AH-64D Apache",
+            [AirframeTypes.C130J] = "C-130J Hercules",
+            [AirframeTypes.CH47F] = "CH-47F Chinook",
             [AirframeTypes.F15E] = "F-15E Strike Eagle",
             [AirframeTypes.F16C] = "F-16C Viper",
             [AirframeTypes.FA18C] = "F/A-18C Hornet",
@@ -40,6 +42,8 @@ namespace JAFDTC
             [AirframeTypes.UNKNOWN] = "",
             [AirframeTypes.A10C] = "A-10C",
             [AirframeTypes.AH64D] = "AH-64D",
+            [AirframeTypes.C130J] = "C-130J",
+            [AirframeTypes.CH47F] = "CH-47F",
             [AirframeTypes.F15E] = "F-15E",
             [AirframeTypes.F16C] = "F-16C",
             [AirframeTypes.FA18C] = "F/A-18C",
@@ -49,7 +53,9 @@ namespace JAFDTC
         {
             [AirframeTypes.UNKNOWN] = "",
             [AirframeTypes.A10C] = "",
-            [AirframeTypes.AH64D] = "",
+            [AirframeTypes.AH64D] = "AH-64D_BLK_II",
+            [AirframeTypes.C130J] = "",
+            [AirframeTypes.CH47F] = "",
             [AirframeTypes.F15E] = "",
             [AirframeTypes.F16C] = "F-16C_50",
             [AirframeTypes.FA18C] = "FA-18C_hornet",
@@ -57,8 +63,8 @@ namespace JAFDTC
 
         public static readonly JsonSerializerOptions JSONOptions = new() { WriteIndented = true };
 
-        public const string VersionJAFDTC = "v1.5.2";              // current version
+        public const string VersionJAFDTC = "v1.5.3";              // current version
 
-        public const string BuildJAFDTC = "version 1.5.2 of 17-Nov-26 (442 vWG build)";
+        public const string BuildJAFDTC = "version 1.5.3 of 18-Nov-26 (442 vWG build)";
     }
 }
